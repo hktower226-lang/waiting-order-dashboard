@@ -1,0 +1,502 @@
+[
+  {
+    "name": "김인영",
+    "role": "본부장",
+    "year": "19년~20년본부장",
+    "count": "100%",
+    "expireDate": "(2026/1/14)",
+    "status": "소멸",
+    "remain": "200%",
+    "note": "5년(제3조 2항예외)"
+  },
+  {
+    "name": "",
+    "role": "본부장",
+    "year": "19년~20년본부장",
+    "count": "100%",
+    "expireDate": "2031-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": "21~22년부본부장"
+  },
+  {
+    "name": "",
+    "role": "본부장",
+    "year": "23~25년본부장",
+    "count": "100%",
+    "expireDate": "2031-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": "인센 협의삭감"
+  },
+  {
+    "name": "조병곤",
+    "role": "본부장",
+    "year": "21년~22년 본부장",
+    "count": "100%",
+    "expireDate": "(2026/2/21)",
+    "status": "소멸",
+    "remain": "100%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "본부장",
+    "year": "22년 본부장",
+    "count": "50%",
+    "expireDate": "(2026/3/12)",
+    "status": "소멸",
+    "remain": "",
+    "note": "소멸 처리 수정 건"
+  },
+  {
+    "name": "",
+    "role": "부본부장",
+    "year": "23년~25년 부본부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "부본부장",
+    "year": "23년~25년 부본부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "남성우",
+    "role": "조직부장",
+    "year": "21년 지부장",
+    "count": "50%",
+    "expireDate": "(2026/2/26)",
+    "status": "소멸",
+    "remain": "100%",
+    "note": "합계80%사용"
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "22년 지부장",
+    "count": "50%",
+    "expireDate": "(2026/2/26)",
+    "status": "소멸",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "23년 지부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "24년~25년조직부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "이우성",
+    "role": "조직부장",
+    "year": "21년 조직부장",
+    "count": "50%",
+    "expireDate": "(2026/4/30)",
+    "status": "소멸",
+    "remain": "50%",
+    "note": "합계80%사용"
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "22년 조직부장",
+    "count": "50%",
+    "expireDate": "(2026/4/30)",
+    "status": "소멸",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "23년~24년6월 조직부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "고종민",
+    "role": "조직부장",
+    "year": "23년~24년6월 조직부장",
+    "count": "50%",
+    "expireDate": "(2025/12/13)",
+    "status": "소멸",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "24년6~25년 조직부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "문민곤",
+    "role": "남서지부장",
+    "year": "23년 지부장",
+    "count": "50%",
+    "expireDate": "(2025/12/11)",
+    "status": "소멸",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "남서지부장",
+    "year": "24년 지부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "정재호",
+    "role": "노안부장",
+    "year": "23년~24년6월 노안부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "100%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "노안부장",
+    "year": "24년6~25년 노안부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "강성두",
+    "role": "중부지부장",
+    "year": "24년 지부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "100%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "중부지부장",
+    "year": "25년 지부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "구윤상",
+    "role": "조직부장",
+    "year": "23년~24년6월 지부장",
+    "count": "50%",
+    "expireDate": "(2026/08/01)",
+    "status": "소멸",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "24년6월~25년 조직부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "강동훈",
+    "role": "사무장",
+    "year": "23년~24년6월 사무장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "100%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "사무장",
+    "year": "24년6월~25년 사무장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "고정현",
+    "role": "본조국장",
+    "year": "21년 본조 조직국장",
+    "count": "50%",
+    "expireDate": "(2025-8-23)",
+    "status": "소멸",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "24년2월~25년 조직부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "김시삼",
+    "role": "정책부장",
+    "year": "23년~24년6월 정책부장",
+    "count": "50%",
+    "expireDate": "임기내1개사용",
+    "status": "소멸",
+    "remain": "0%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "정책부장",
+    "year": "24년6월~25년 정책부장",
+    "count": "50%",
+    "expireDate": "26년 9월9일사용",
+    "status": "소멸",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "김재영",
+    "role": "총무부장",
+    "year": "23년~24년6월 총무부장",
+    "count": "50%",
+    "expireDate": "임기내1개사용",
+    "status": "소멸",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "총무부장",
+    "year": "24년6월~25년 총무부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "양지훈",
+    "role": "조직부장",
+    "year": "23년~24년6월 조직부장",
+    "count": "50%",
+    "expireDate": "임기내1개사용",
+    "status": "소멸",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "24년6월~25년 조직부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "이동준",
+    "role": "조직부장",
+    "year": "23년~24년6월 조직부장",
+    "count": "50%",
+    "expireDate": "24년연말사용",
+    "status": "소멸",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "24년6월~25년 조직부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "김우선",
+    "role": "남부지부장",
+    "year": "24년지부장",
+    "count": "50%",
+    "expireDate": "25년 중반사용",
+    "status": "소멸",
+    "remain": "0%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "남부지부장",
+    "year": "25년 지부장",
+    "count": "50%",
+    "expireDate": "26년 9월13일사용",
+    "status": "소멸",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "문성식",
+    "role": "서부지부장",
+    "year": "24년 지부장",
+    "count": "50%",
+    "expireDate": "25년 중반사용",
+    "status": "소멸",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "서부지부장",
+    "year": "25년 지부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "양현호",
+    "role": "조직차장",
+    "year": "23년~25년 조직차장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "임용빈",
+    "role": "조직부장",
+    "year": "23년~24년6월 조직부장",
+    "count": "50%",
+    "expireDate": "26년 4월23일사용",
+    "status": "소멸",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "",
+    "role": "조직부장",
+    "year": "24년6월~25년 조직부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "최명성",
+    "role": "사무차장",
+    "year": "23~25년 사무차장",
+    "count": "50%",
+    "expireDate": "26년 7월21일사용",
+    "status": "소멸",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "임용",
+    "role": "북부지부장",
+    "year": "25년 지부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "정승일",
+    "role": "동부지부장",
+    "year": "25년 지부장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "김동우",
+    "role": "노안차장",
+    "year": "23~25년노안차장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "엄동기",
+    "role": "조직차장",
+    "year": "23년~25년 조직차장",
+    "count": "50%",
+    "expireDate": "26년 7월29일사용",
+    "status": "소멸",
+    "remain": "",
+    "note": ""
+  },
+  {
+    "name": "우경원",
+    "role": "노안차장",
+    "year": "23년~25년 노안차장",
+    "count": "50%",
+    "expireDate": "2029-01-11",
+    "status": "유효",
+    "remain": "50%",
+    "note": ""
+  },
+  {
+    "name": "이우진",
+    "role": "용인지부장",
+    "year": "25년 5월~26년 4월 지부장",
+    "count": "50%",
+    "expireDate": "26년 8월24일사용",
+    "status": "소멸",
+    "remain": "",
+    "note": ""
+  }
+]

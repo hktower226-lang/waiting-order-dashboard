@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>경기지역본부 통합 관리 시스템</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --primary-light: #3b82f6;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --badge-sub-bg: #fef3c7;
+            --badge-sub-text: #92400e;
+            --badge-doc-bg: #dcfce7;
+            --badge-doc-text: #166534;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.4;
+            padding: 6px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* 메인 상단 탭 버튼 스타일 */
+        .tab-buttons {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid var(--primary-color);
+            border-radius: 6px;
+            background-color: #ffffff;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 10px 12px;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 6px;
+        }
+
+        .header h1 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stats-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: var(--text-sub);
+        }
+
+        .stats-badge {
+            background: #eff6ff;
+            color: var(--primary-light);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 7px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.82rem;
+            outline: none;
+            background-color: var(--card-bg);
+            min-width: 0;
+        }
+
+        .filter-select {
+            padding: 7px 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.82rem;
+            outline: none;
+            background-color: var(--card-bg);
+            width: 85px;
+        }
+
+        .search-input:focus, .filter-select:focus {
+            border-color: var(--primary-light);
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.76rem;
+            white-space: normal;
+            word-break: keep-all;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 8px 2px;
+            border-bottom: 1.5px solid var(--border-color);
+            text-align: center;
+            font-size: 0.74rem;
+        }
+
+        td {
+            padding: 7px 2px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .badge-branch { background-color: #e0f2fe; color: #0369a1; }
+        .badge-sub { background-color: var(--badge-sub-bg); color: var(--badge-sub-text); }
+        .badge-doc { background-color: var(--badge-doc-bg); color: var(--badge-doc-text); }
+        .badge-days { background-color: #334155; color: #ffffff; font-weight: 600; }
+        .badge-future { background-color: #fee2e2; color: #dc2626; }
+        
+        .badge-active { background-color: #dcfce7; color: #15803d; }
+        .badge-expired { background-color: #f1f5f9; color: #94a3b8; }
+
+        .note-cell {
+            white-space: pre-line;
+            color: var(--text-sub);
+            font-size: 0.72rem;
+            line-height: 1.25;
+            max-width: 110px;
+        }
+
+        .notice-box {
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: #475569;
+            line-height: 1.4;
+            border: 1px solid var(--border-color);
+            white-space: pre-line;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 4px; }
+            th, td { padding: 6px 1px; }
+            .note-cell { max-width: 85px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 상단 탭 선택 버튼 단추 -->
+    <div class="tab-buttons">
+        <button class="tab-btn active" onclick="switchTab('waitingTab')">📋 대기자 명단</button>
+        <button class="tab-btn" onclick="switchTab('incentiveTab')">🎖️ 간부 인센티브</button>
+    </div>
+
+    <!-- 1. 대기자 명단 탭 -->
+    <div id="waitingTab" class="tab-content active">
+        <div class="header">
+            <h1>📋 대기자 명단 현황</h1>
+            <div class="stats-summary">
+                <span>총 인원: <strong id="total-count" class="stats-badge">0명</strong></span>
+                <span>기준일: <strong id="today-date"></strong></span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-input" placeholder="이름, 지부, 비고 검색...">
+            <select id="branchFilter" class="filter-select">
+                <option value="">전체지부</option>
+                <option value="본부">본부</option>
+                <option value="남서">남서</option>
+                <option value="남부">남부</option>
+                <option value="북서">북서</option>
+                <option value="북부">북부</option>
+                <option value="동부">동부</option>
+                <option value="서부">서부</option>
+                <option value="중부">중부</option>
+                <option value="용인">용인</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 24px;">순번</th>
+                        <th style="width: 38px;">이름</th>
+                        <th style="width: 32px;">지부</th>
+                        <th style="width: 60px;">종료일</th>
+                        <th>비고</th>
+                        <th style="width: 40px;">임대사</th>
+                        <th style="width: 24px;">소형</th>
+                        <th style="width: 24px;">접수</th>
+                        <th style="width: 52px;">대기경과</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 2. 간부 인센티브 현황 탭 -->
+    <div id="incentiveTab" class="tab-content">
+        <div class="header">
+            <h1>🎖️ 간부 우선 취업권(인센티브) 현황</h1>
+            <div class="stats-summary">
+                <span>잔여 합계: <strong class="stats-badge" id="inc-total-remain">0%</strong></span>
+                <span>기준일: <strong id="inc-today-date"></strong></span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="incSearchInput" class="search-input" placeholder="성함, 직책, 상태 검색...">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 42px;">성함</th>
+                        <th style="width: 50px;">직책</th>
+                        <th>발생년도</th>
+                        <th style="width: 38px;">발생</th>
+                        <th style="width: 65px;">소멸(사용)일</th>
+                        <th style="width: 32px;">상태</th>
+                        <th style="width: 38px;">잔여</th>
+                        <th>비고</th>
+                    </tr>
+                </thead>
+                <tbody id="incTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="notice-box">
+            📌 <strong>[근거 및 관련 규정 안내]</strong>
+            • 제3조 2항: 우선취업 인센티브의 유효기간 및 소멸 (이 규약 시행 당시 이미 우선취업 인센티브를 보유하고 있는 자의 경우에도 유효기간은 이 규약 시행일로부터 3년으로 함)
+            • 본 자료는 2025년 12월 15일 자로 인수인계받은 데이터를 근거로 작성되었습니다.
+            • 전임 집행부 배포 자료와 대조 결과 행정적 문서 작성 오류가 통보되었으며, 2025년까지의 내역은 전 집행부 제공 자료에 기반합니다.
+            • 2026. 01. 28. 경기지역본부장 박문철 (직인생략)
+        </div>
+    </div>
+</div>
+
+<script>
+// 탭 전환 기능
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+
+// ---------------- 1. 대기자 명단 로직 ----------------
+let waitingList = [];
+
+function calculatePassedDays(endDateStr) {
+    if (!endDateStr) return { text: "-", isFuture: false };
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const endDate = new Date(endDateStr);
+    endDate.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.floor((today - endDate) / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 0) return { text: `${diffDays}일`, isFuture: false };
+    if (diffDays === 0) return { text: "오늘", isFuture: false };
+    return { text: `-${Math.abs(diffDays)}일`, isFuture: true };
+}
+
+function renderWaitingTable(data) {
+    const tableBody = document.getElementById('tableBody');
+    document.getElementById('total-count').innerText = `${data.length}명`;
+    
+    if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 20px; color: var(--text-sub);">결과가 없습니다.</td></tr>`;
+        return;
+    }
+
+    tableBody.innerHTML = data.map(item => {
+        const daysInfo = calculatePassedDays(item.endDate);
+        const daysBadgeClass = daysInfo.isFuture ? 'badge-future' : 'badge-days';
+
+        return `
+            <tr>
+                <td style="text-align: center; color: var(--text-sub);">${item.seq}</td>
+                <td style="font-weight: 600;">${item.name}</td>
+                <td style="text-align: center;"><span class="badge badge-branch">${item.branch}</span></td>
+                <td style="font-size: 0.72rem; text-align: center;">${item.endDate || '-'}</td>
+                <td class="note-cell">${item.note || '-'}</td>
+                <td style="font-size: 0.72rem;">${item.company || '-'}</td>
+                <td style="text-align: center;">${item.isSub === 'O' ? '<span class="badge badge-sub">O</span>' : (item.isSub === 'X' ? '<span style="color:#cbd5e1;">X</span>' : '-')}</td>
+                <td style="text-align: center;">${item.isDoc === 'O' ? '<span class="badge badge-doc">O</span>' : '-'}</td>
+                <td style="text-align: center;"><span class="badge ${daysBadgeClass}">${daysInfo.text}</span></td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function filterWaitingData() {
+    const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
+    const selectedBranch = document.getElementById('branchFilter').value;
+
+    const filtered = waitingList.filter(item => {
+        const daysInfo = calculatePassedDays(item.endDate);
+        const matchesSearch = 
+            item.name.toLowerCase().includes(searchText) ||
+            item.branch.toLowerCase().includes(searchText) ||
+            (item.note && item.note.toLowerCase().includes(searchText)) ||
+            (item.company && item.company.toLowerCase().includes(searchText)) ||
+            daysInfo.text.toLowerCase().includes(searchText);
+
+        const matchesBranch = selectedBranch === '' || item.branch === selectedBranch;
+        return matchesSearch && matchesBranch;
+    });
+
+    renderWaitingTable(filtered);
+}
+
+// ---------------- 2. 간부 인센티브 로직 ----------------
+let incentiveData = [];
+
+function renderIncentiveTable(data) {
+    const incTableBody = document.getElementById('incTableBody');
+    if (data.length === 0) {
+        incTableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--text-sub);">결과가 없습니다.</td></tr>`;
+        return;
+    }
+
+    // 잔여 합계 계산
+    let totalRemain = 0;
+    data.forEach(item => {
+        if(item.remain) {
+            const num = parseFloat(item.remain.replace('%', ''));
+            if(!isNaN(num)) totalRemain += num;
+        }
+    });
+    document.getElementById('inc-total-remain').innerText = `${totalRemain}% (${totalRemain / 100}개)`;
+
+    incTableBody.innerHTML = data.map(item => {
+        const statusBadge = item.status === '유효' 
+            ? '<span class="badge badge-active">유효</span>' 
+            : '<span class="badge badge-expired">소멸</span>';
+
+        return `
+            <tr>
+                <td style="font-weight: 600;">${item.name || ''}</td>
+                <td>${item.role}</td>
+                <td style="font-size: 0.72rem;">${item.year}</td>
+                <td style="text-align: center; font-weight: 600;">${item.count}</td>
+                <td style="font-size: 0.7rem; text-align: center;">${item.expireDate}</td>
+                <td style="text-align: center;">${statusBadge}</td>
+                <td style="text-align: center; font-weight: 600; color: var(--primary-light);">${item.remain || ''}</td>
+                <td class="note-cell">${item.note || ''}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function filterIncentiveData() {
+    const searchText = document.getElementById('incSearchInput').value.toLowerCase().trim();
+    const filtered = incentiveData.filter(item => 
+        item.name.toLowerCase().includes(searchText) ||
+        item.role.toLowerCase().includes(searchText) ||
+        item.status.toLowerCase().includes(searchText) ||
+        item.year.toLowerCase().includes(searchText) ||
+        (item.note && item.note.toLowerCase().includes(searchText))
+    );
+    renderIncentiveTable(filtered);
+}
+
+// ---------------- 외부 JSON 로드 ----------------
+// 1. data.json 로드
+fetch('./data.json?v=' + new Date().getTime())
+    .then(response => response.json())
+    .then(data => {
+        waitingList = data;
+        renderWaitingTable(waitingList);
+    })
+    .catch(err => console.error("data.json 로드 실패:", err));
+
+// 2. incentive.json 로드
+fetch('./incentive.json?v=' + new Date().getTime())
+    .then(response => response.json())
+    .then(data => {
+        incentiveData = data;
+        renderIncentiveTable(incentiveData);
+    })
+    .catch(err => console.error("incentive.json 로드 실패:", err));
+
+// 이벤트 리스너 등록
+document.getElementById('searchInput').addEventListener('input', filterWaitingData);
+document.getElementById('branchFilter').addEventListener('change', filterWaitingData);
+document.getElementById('incSearchInput').addEventListener('input', filterIncentiveData);
+
+// 날짜 세팅
+const todayObj = new Date();
+const formattedDate = `${todayObj.getFullYear()}.${String(todayObj.getMonth() + 1).padStart(2, '0')}.${String(todayObj.getDate()).padStart(2, '0')}`;
+document.getElementById('today-date').innerText = formattedDate;
+document.getElementById('inc-today-date').innerText = formattedDate;
+</script>
+
+</body>
+</html>
