@@ -212,6 +212,10 @@
             white-space: pre-line;
         }
 
+.inc-filters { display:flex; gap:6px; margin: 7px 0; }
+        .inc-filter-btn { flex:1; padding:10px 3px; background:#fff; border:1px solid #cbd5e1; border-radius:7px; color:#334155; font-size:.8rem; font-weight:700; cursor:pointer; }
+        .inc-filter-btn.active { background:#1e3a8a; border-color:#1e3a8a; color:white; }
+        .inc-view-summary { margin:7px 0; padding:10px 12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; color:#1e3a8a; font-size:.79rem; font-weight:600; }
         @media (max-width: 600px) {
             body { padding: 4px; }
             th, td { padding: 6px 1px; }
@@ -285,6 +289,12 @@
             </div>
         </div>
 
+        <div class="inc-filters" role="group" aria-label="인센티브 상태 필터">
+            <button type="button" class="inc-filter-btn active" data-filter="유효">✅ 유효</button>
+            <button type="button" class="inc-filter-btn" data-filter="전체">📋 전체</button>
+            <button type="button" class="inc-filter-btn" data-filter="소멸">🗂 사용·소멸</button>
+        </div>
+        <div class="inc-view-summary" id="inc-view-summary" aria-live="polite"></div>
         <div class="controls">
             <input type="text" id="incSearchInput" class="search-input" placeholder="성함, 직책, 상태 검색...">
         </div>
@@ -397,54 +407,68 @@ function filterWaitingData() {
 // ---------------- 2. 간부 인센티브 로직 ----------------
 let incentiveData = [];
 
+let incSelectedFilter = '유효';
+
+function incentiveWithNames() {
+    let lastName = '';
+    return incentiveData.map(item => {
+        if (item.name && item.name.trim()) lastName = item.name.trim();
+        return { ...item, displayName: lastName };
+    });
+}
+
 function renderIncentiveTable(data) {
-    const incTableBody = document.getElementById('incTableBody');
-    if (data.length === 0) {
-        incTableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--text-sub);">결과가 없습니다.</td></tr>`;
+    const tbody = document.getElementById('incTableBody');
+    const uniquePeople = new Set(data.map(item => item.displayName).filter(Boolean)).size;
+    const activeCount = data.filter(item => item.status === '유효').length;
+    const closedCount = data.filter(item => item.status === '소멸').length;
+    const validPercent = data.filter(item => item.status === '유효')
+        .reduce((sum,item) => sum + (parseFloat(item.count) || 0), 0);
+    document.getElementById('inc-total-remain').innerText = validPercent + '% (' + (validPercent / 100) + '개)';
+    document.getElementById('inc-view-summary').textContent =
+        (incSelectedFilter === '유효' ? '✅ 유효 인센티브' : incSelectedFilter === '소멸' ? '🗂 사용·소멸 내역' : '📋 전체 인센티브') +
+        ' · ' + uniquePeople + '명 / ' + data.length + '건' +
+        (incSelectedFilter === '전체' ? ' (유효 ' + activeCount + '건 · 사용·소멸 ' + closedCount + '건)' : '');
+    if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px">해당 내역이 없습니다.</td></tr>';
         return;
     }
-
-    // 잔여 합계 계산
-    let totalRemain = 0;
-    data.forEach(item => {
-        if(item.remain) {
-            const num = parseFloat(item.remain.replace('%', ''));
-            if(!isNaN(num)) totalRemain += num;
-        }
-    });
-    document.getElementById('inc-total-remain').innerText = `${totalRemain}% (${totalRemain / 100}개)`;
-
-    incTableBody.innerHTML = data.map(item => {
-        const statusBadge = item.status === '유효' 
-            ? '<span class="badge badge-active">유효</span>' 
+    const escapeHTML = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
+       '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[c]));
+    tbody.innerHTML = data.map(item => {
+        const statusBadge = item.status === '유효'
+            ? '<span class="badge badge-active">유효</span>'
             : '<span class="badge badge-expired">소멸</span>';
-
-        return `
-            <tr>
-                <td style="font-weight: 600;">${item.name || ''}</td>
-                <td>${item.role}</td>
-                <td style="font-size: 0.72rem;">${item.year}</td>
-                <td style="text-align: center; font-weight: 600;">${item.count}</td>
-                <td style="font-size: 0.7rem; text-align: center;">${item.expireDate}</td>
-                <td style="text-align: center;">${statusBadge}</td>
-                <td style="text-align: center; font-weight: 600; color: var(--primary-light);">${item.remain || ''}</td>
-                <td class="note-cell">${item.note || ''}</td>
-            </tr>
-        `;
+        return '<tr>' +
+            '<td style="font-weight:600">' + escapeHTML(item.displayName) + '</td>' +
+            '<td>' + escapeHTML(item.role) + '</td>' +
+            '<td style="font-size:.72rem">' + escapeHTML(item.year) + '</td>' +
+            '<td style="text-align:center;font-weight:600">' + escapeHTML(item.count) + '</td>' +
+            '<td style="font-size:.7rem;text-align:center">' + escapeHTML(item.expireDate) + '</td>' +
+            '<td style="text-align:center">' + statusBadge + '</td>' +
+            '<td style="text-align:center;font-weight:600;color:#3b82f6">' + escapeHTML(item.remain) + '</td>' +
+            '<td class="note-cell">' + escapeHTML(item.note) + '</td></tr>';
     }).join('');
 }
 
 function filterIncentiveData() {
-    const searchText = document.getElementById('incSearchInput').value.toLowerCase().trim();
-    const filtered = incentiveData.filter(item => 
-        item.name.toLowerCase().includes(searchText) ||
-        item.role.toLowerCase().includes(searchText) ||
-        item.status.toLowerCase().includes(searchText) ||
-        item.year.toLowerCase().includes(searchText) ||
-        (item.note && item.note.toLowerCase().includes(searchText))
-    );
-    renderIncentiveTable(filtered);
+    const term = document.getElementById('incSearchInput').value.toLowerCase().trim();
+    const data = incentiveWithNames().filter(item => {
+        if (incSelectedFilter !== '전체' && item.status !== incSelectedFilter) return false;
+        return [item.displayName,item.role,item.status,item.year,item.note,item.expireDate]
+            .some(v => String(v || '').toLowerCase().includes(term));
+    });
+    renderIncentiveTable(data);
 }
+
+document.querySelectorAll('.inc-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        incSelectedFilter = btn.dataset.filter;
+        document.querySelectorAll('.inc-filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+        filterIncentiveData();
+    });
+});
 
 // ---------------- 외부 JSON 로드 ----------------
 // 1. data.json 로드
@@ -461,7 +485,7 @@ fetch('./incentive.json?v=' + new Date().getTime())
     .then(response => response.json())
     .then(data => {
         incentiveData = data;
-        renderIncentiveTable(incentiveData);
+        filterIncentiveData();
     })
     .catch(err => console.error("incentive.json 로드 실패:", err));
 
