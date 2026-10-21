@@ -797,7 +797,7 @@
     "note": "",
     "company": "",
     "isSub": "O",
-    "isDoc": ""
+    "isDoc": "O"
   },
   {
     "seq": 81,
@@ -857,7 +857,7 @@
     "note": "",
     "company": "",
     "isSub": "O",
-    "isDoc": ""
+    "isDoc": "O"
   },
   {
     "seq": 87,
@@ -1016,7 +1016,17 @@
     "endDate": "2026-10-20",
     "note": "",
     "company": "",
-    "isSub": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 103,
+    "name": "최영식",
+    "branch": "남서",
+    "endDate": "2026-10-21",
+    "note": "",
+    "company": "",
+    "isSub": "X",
     "isDoc": ""
   }
 ]
