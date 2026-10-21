@@ -917,7 +917,7 @@
     "note": "",
     "company": "",
     "isSub": "X",
-    "isDoc": ""
+    "isDoc": "O"
   },
   {
     "seq": 93,
@@ -927,7 +927,7 @@
     "note": "",
     "company": "",
     "isSub": "X",
-    "isDoc": ""
+    "isDoc": "O"
   },
   {
     "seq": 94,
@@ -937,7 +937,7 @@
     "note": "",
     "company": "",
     "isSub": "X",
-    "isDoc": ""
+    "isDoc": "O"
   },
   {
     "seq": 95,
@@ -997,7 +997,7 @@
     "note": "병가시작 16일부터~",
     "company": "",
     "isSub": "",
-    "isDoc": ""
+    "isDoc": "O"
   },
   {
     "seq": 101,
