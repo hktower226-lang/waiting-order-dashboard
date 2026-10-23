@@ -1028,5 +1028,25 @@
     "company": "",
     "isSub": "X",
     "isDoc": ""
+  },
+  {
+    "seq": 104,
+    "name": "김태준",
+    "branch": "용인",
+    "endDate": "2026-10-22",
+    "note": "",
+    "company": "",
+    "isSub": "",
+    "isDoc": ""
+  },
+  {
+    "seq": 105,
+    "name": "권강구",
+    "branch": "남부",
+    "endDate": "2026-10-23",
+    "note": "",
+    "company": "",
+    "isSub": "",
+    "isDoc": ""
   }
 ]
