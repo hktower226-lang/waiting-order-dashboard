@@ -1061,8 +1061,28 @@
   },
   {
     "seq": 107,
+    "name": "오세훈",
+    "branch": "남서",
+    "endDate": "2026-10-27",
+    "note": "",
+    "company": "",
+    "isSub": "",
+    "isDoc": ""
+  },
+  {
+    "seq": 108,
     "name": "김성호",
     "branch": "북부",
+    "endDate": "2026-10-27",
+    "note": "",
+    "company": "",
+    "isSub": "",
+    "isDoc": ""
+  },
+  {
+    "seq": 109,
+    "name": "김삼성",
+    "branch": "남서",
     "endDate": "2026-10-27",
     "note": "",
     "company": "",
