@@ -34,7 +34,7 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 </div>
 <div class="card">
 <h2>희망 신청</h2>
-<p>기존 대기순번 명단에 등록된 조합원만 신청할 수 있습니다. 성명 및 지부를 정확히 입력해주세요.</p>
+<p>기존 대기순번 명단에 등록된 조합원만 신청할 수 있습니다. 이름·지부·생년월일 6자리를 비공개 조합원 인증명단과 대조합니다.</p>
 <label for="name">성명</label><input id="name" maxlength="40" autocomplete="name" placeholder="실명 입력">
 <label for="branch">소속 지부</label>
 <select id="branch">
@@ -42,9 +42,12 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <option>본부</option><option>중부</option><option>남부</option><option>남서</option>
 <option>서부</option><option>동부</option><option>북부</option><option>용인</option>
 </select>
+<label for="birth6">생년월일 6자리</label>
+<input id="birth6" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="bday" placeholder="YYMMDD · 예: 791225" aria-describedby="birthhelp">
+<p id="birthhelp"><small>주민등록번호 앞 6자리만 입력하세요. 뒷자리는 입력하지 않습니다.</small></p>
 <label style="font-weight:400"><input id="consent" type="checkbox" style="width:auto;margin-right:7px">본인 희망 신청이며 허위신청이 아님을 확인합니다.</label>
 <button id="send" disabled>희망 신청</button>
-<p><small>※ 이름과 지부만으로 본인 인증은 불가능합니다. 정식 운영 전 별도 본인확인 수단이 필요합니다.</small></p>
+<p><small>※ 생년월일 대조로 명단 확인을 합니다. 이는 신분증·휴대전화 등을 통한 강한 본인인증을 대신하지 않습니다. 입력한 생년월일은 접수 기록 및 공개 명단에 저장하지 않습니다.</small></p>
 <div id="message" aria-live="polite"></div>
 </div>
 <div class="card">
@@ -96,13 +99,13 @@ function refresh(){google.script.run.withSuccessHandler(render).withFailureHandl
 el('reload').onclick=refresh;
 el('send').onclick=function(){
  if(!state||!state.accepting||submitting)return;
- var name=el('name').value.trim(),branch=el('branch').value,consent=el('consent').checked;
- if(!name||!branch||!consent){el('message').textContent='성명, 지부, 확인 체크를 모두 입력해주세요.';return}
+ var name=el('name').value.trim(),branch=el('branch').value,birth6=el('birth6').value.trim(),consent=el('consent').checked;
+ if(!name||!branch||!/^[0-9]{6}$/.test(birth6)||!consent){el('message').textContent='성명, 지부, 생년월일 6자리, 확인 체크를 모두 입력해주세요.';return}
  submitting=true;el('send').disabled=true;el('message').textContent='접수 중...';
  google.script.run.withSuccessHandler(function(r){
-  submitting=false;el('message').textContent=r.message;refresh();
- }).withFailureHandler(function(e){submitting=false;el('message').textContent=e.message||String(e);el('send').disabled=false})
- .submitApplicant(NOTICE_ID,name,branch,consent);
+  submitting=false;el('birth6').value='';el('message').textContent=r.message;refresh();
+ }).withFailureHandler(function(e){submitting=false;el('birth6').value='';el('message').textContent=e.message||String(e);el('send').disabled=false})
+ .submitApplicant(NOTICE_ID,name,branch,birth6,consent);
 };
 refresh();setInterval(refresh,15000);setInterval(tick,1000);
 </script>
