@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,"Malgun Gothic",sans-serif;color:#13233b;background:#f1f5f9}
+*{box-sizing:border-box}body{margin:0;padding:16px 12px 40px}.wrap{max-width:680px;margin:auto}
+.card{background:white;border:1px solid #e1e8f0;border-radius:14px;padding:17px;margin:12px 0;box-shadow:0 2px 10px #102f5a0a}
+.eyebrow{font-size:12px;color:#4b6990;font-weight:700}h1{font-size:22px;line-height:1.35;margin:9px 0}
+h2{font-size:18px;margin:0 0 13px}p{line-height:1.6;margin:8px 0;color:#43546e}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.meta>div{padding:9px;background:#f4f7fa;border-radius:8px}
+.meta span{display:block;color:#65758a;font-size:12px;margin-bottom:3px}
+.meta b{font-size:14px}.warn{padding:12px;border-radius:8px;background:#fff5df;color:#734b00;margin:12px 0}
+label{display:block;font-weight:700;font-size:14px;margin:10px 0 5px}
+input,select{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:13px;font-size:16px;background:white;color:#13233b}
+button{width:100%;border:0;border-radius:9px;background:#1e3a8a;color:white;font-size:16px;font-weight:700;padding:14px;cursor:pointer}
+button:disabled{background:#a5b5c9;cursor:default}
+small{color:#68778c}.status{padding:10px;background:#eef5fe;border-radius:8px;margin:10px 0;font-size:14px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e7ecf2;align-items:center}
+.tag{font-size:12px;background:#e9f0ff;color:#134c9b;padding:6px 8px;border-radius:7px;font-weight:700;white-space:nowrap}
+main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
+</style>
+</head>
+<body><main class="wrap">
+<div class="card">
+<div class="eyebrow">한국타워크레인조종사노동조합 · 경기지역본부</div>
+<h1 id="project">공고를 불러오는 중...</h1>
+<p id="status" class="status">연결 중</p>
+<div class="meta" id="facts"></div>
+<div id="notes"></div>
+<div class="warn"><b>접수 마감:</b> <span id="deadline">확인 중</span><div id="remain" style="margin-top:5px"></div></div>
+</div>
+<div class="card">
+<h2>희망 신청</h2>
+<p>기존 대기순번 명단에 등록된 조합원만 신청할 수 있습니다. 성명 및 지부를 정확히 입력해주세요.</p>
+<label for="name">성명</label><input id="name" maxlength="40" autocomplete="name" placeholder="실명 입력">
+<label for="branch">소속 지부</label>
+<select id="branch">
+<option value="">지부 선택</option>
+<option>본부</option><option>중부</option><option>남부</option><option>남서</option>
+<option>서부</option><option>동부</option><option>북부</option><option>용인</option>
+</select>
+<label style="font-weight:400"><input id="consent" type="checkbox" style="width:auto;margin-right:7px">본인 희망 신청이며 허위신청이 아님을 확인합니다.</label>
+<button id="send" disabled>희망 신청</button>
+<p><small>※ 이름과 지부만으로 본인 인증은 불가능합니다. 정식 운영 전 별도 본인확인 수단이 필요합니다.</small></p>
+<div id="message" aria-live="polite"></div>
+</div>
+<div class="card">
+<h2>실시간 희망자 우선순위 · <span id="total">0명</span></h2>
+<p><small>대기순번 오름차순으로 표시합니다. 순위는 약 15초마다 갱신되며, 최종 선정은 관리자의 자격 및 이의 확인 후 확정됩니다.</small></p>
+<div id="people" aria-live="polite">불러오는 중...</div>
+<button id="reload" style="background:#64748b;margin-top:10px">지금 새로고침</button>
+</div>
+</main>
+<script>
+var NOTICE_ID = <?!= JSON.stringify(noticeId) ?>;
+var state = null, submitting = false;
+function el(x){return document.getElementById(x)}
+function para(t){var e=document.createElement('p');e.textContent=t;return e}
+function fmt(t){return new Date(t).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false})}
+function tick(){
+ if(!state)return;
+ var ms=new Date(state.notice.deadline).getTime()-Date.now();
+ if(ms<=0){el('remain').textContent='접수 마감';el('send').disabled=true;return}
+ var h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);
+ el('remain').textContent='마감까지 '+h+'시간 '+m+'분 '+s+'초';
+}
+function error(e){el('message').textContent=e.message||String(e);el('status').textContent='연결 오류 — 관리자에게 문의해주세요.';el('send').disabled=true}
+function render(result){
+ state=result;var n=result.notice;
+ el('project').textContent=n.project;
+ el('status').textContent=result.accepting?'희망 신청 접수 중':(result.configured?'접수 마감':'시험 공고 · 접수 미개통');
+ el('deadline').textContent=fmt(n.deadline);
+ el('facts').replaceChildren();
+ [['주소',n.site],['임대사',n.rental],['급여',n.wage],['층수',n.floors],['장비',n.machine],['설치 예정',n.plannedInstallation],['출근 예정',n.startCondition],['예상 사용기간',n.duration]].forEach(function(pair){
+  var d=document.createElement('div'),s=document.createElement('span'),b=document.createElement('b');
+  s.textContent=pair[0];b.textContent=pair[1]||'-';d.append(s,b);el('facts').appendChild(d);
+ });
+ el('notes').replaceChildren();
+ (n.notes||[]).forEach(function(t){el('notes').appendChild(para('• '+t))});
+ el('total').textContent=result.total+'명';
+ el('people').replaceChildren();
+ if(!result.participants.length){el('people').appendChild(para('현재 등록된 희망자가 없습니다.'))}
+ result.participants.forEach(function(p,i){
+  var row=document.createElement('div'),r=document.createElement('span'),nm=document.createElement('b');
+  row.className='row';r.className='tag';r.textContent=(i+1)+'순위 · 대기 '+p.seq+'번';
+  nm.textContent=p.name+' ('+p.branch+')';
+  row.append(r,nm);el('people').appendChild(row);
+ });
+ el('send').disabled=!result.accepting||submitting;
+ tick();
+}
+function refresh(){google.script.run.withSuccessHandler(render).withFailureHandler(error).getState(NOTICE_ID)}
+el('reload').onclick=refresh;
+el('send').onclick=function(){
+ if(!state||!state.accepting||submitting)return;
+ var name=el('name').value.trim(),branch=el('branch').value,consent=el('consent').checked;
+ if(!name||!branch||!consent){el('message').textContent='성명, 지부, 확인 체크를 모두 입력해주세요.';return}
+ submitting=true;el('send').disabled=true;el('message').textContent='접수 중...';
+ google.script.run.withSuccessHandler(function(r){
+  submitting=false;el('message').textContent=r.message;refresh();
+ }).withFailureHandler(function(e){submitting=false;el('message').textContent=e.message||String(e);el('send').disabled=false})
+ .submitApplicant(NOTICE_ID,name,branch,consent);
+};
+refresh();setInterval(refresh,15000);setInterval(tick,1000);
+</script>
+</body></html>
