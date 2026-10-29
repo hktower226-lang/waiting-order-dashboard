@@ -1016,7 +1016,7 @@
     "endDate": "2026-10-22",
     "note": "",
     "company": "",
-    "isSub": "",
+    "isSub": "X",
     "isDoc": ""
   },
   {
@@ -1026,7 +1026,7 @@
     "endDate": "2026-10-23",
     "note": "",
     "company": "",
-    "isSub": "",
+    "isSub": "X",
     "isDoc": ""
   },
   {
@@ -1046,7 +1046,7 @@
     "endDate": "2026-10-27",
     "note": "",
     "company": "",
-    "isSub": "",
+    "isSub": "X",
     "isDoc": ""
   },
   {
@@ -1056,7 +1056,7 @@
     "endDate": "2026-10-27",
     "note": "",
     "company": "",
-    "isSub": "",
+    "isSub": "O",
     "isDoc": ""
   },
   {
@@ -1066,7 +1066,7 @@
     "endDate": "2026-10-27",
     "note": "",
     "company": "",
-    "isSub": "",
+    "isSub": "X",
     "isDoc": ""
   },
   {
@@ -1076,7 +1076,7 @@
     "endDate": "2026-10-28",
     "note": "",
     "company": "",
-    "isSub": "",
+    "isSub": "O",
     "isDoc": ""
   },
   {
@@ -1086,7 +1086,7 @@
     "endDate": "2026-10-28",
     "note": "",
     "company": "",
-    "isSub": "",
+    "isSub": "X",
     "isDoc": ""
   }
 ]
