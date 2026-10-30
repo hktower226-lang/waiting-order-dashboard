@@ -1,1 +1,1102 @@
-[{"seq":1,"name":"백경용","branch":"남서","endDate":"2024-08-03","note":"","company":"","isSub":"X","isDoc":""},{"seq":2,"name":"이일권","branch":"서부","endDate":"2024-06-19","note":"05-13 평택 사닥다리건설 종료 (소형)","company":"소형 근무","isSub":"O","isDoc":""},{"seq":3,"name":"양정욱","branch":"남서","endDate":"2024-10-31","note":"","company":"","isSub":"X","isDoc":""},{"seq":4,"name":"양성호","branch":"남서","endDate":"2024-11-07","note":"","company":"","isSub":"X","isDoc":""},{"seq":5,"name":"남성우","branch":"본부","endDate":"2026-02-26","note":"간부 인센티브 80%","company":"","isSub":"X","isDoc":"O"},{"seq":6,"name":"김승섭","branch":"북서","endDate":"2025-04-01","note":"03.27~05.29일 수원 세움건설 종료 (소형)","company":"소형 근무","isSub":"X","isDoc":""},{"seq":7,"name":"김정섭","branch":"북서","endDate":"2025-04-07","note":"의왕제일건설 이력서 선정","company":"월드타워","isSub":"","isDoc":""},{"seq":8,"name":"김철","branch":"남서","endDate":"2026-02-21","note":"장현 디어스이앤씨 (소형) 05.04~09.30 소형현장근무완료 / 고덕우미 이력서 선정","company":"동양","isSub":"X","isDoc":"O"},{"seq":9,"name":"송영준","branch":"서부","endDate":"2025-06-21","note":"","company":"","isSub":"X","isDoc":""},{"seq":10,"name":"전동환","branch":"남서","endDate":"2025-07-11","note":"","company":"","isSub":"X","isDoc":""},{"seq":11,"name":"임재명","branch":"동부","endDate":"2025-07-12","note":"","company":"","isSub":"X","isDoc":""},{"seq":12,"name":"진기수","branch":"용인","endDate":"2025-07-12","note":"","company":"","isSub":"X","isDoc":""},{"seq":13,"name":"이승훈","branch":"북서","endDate":"2025-07-26","note":"서초 업무시설 바론건설 이력서 선정(소형) 04.27일 출근~","company":"소형 근무","isSub":"O","isDoc":""},{"seq":14,"name":"이훈","branch":"남서","endDate":"2025-08-11","note":"","company":"","isSub":"X","isDoc":""},{"seq":15,"name":"김수민","branch":"북부","endDate":"2025-08-19","note":"","company":"","isSub":"X","isDoc":""},{"seq":16,"name":"김경숙","branch":"중부","endDate":"2025-08-30","note":"","company":"","isSub":"X","isDoc":""},{"seq":17,"name":"홍대훈","branch":"본부","endDate":"2025-09-25","note":"남사읍 롯데테크 (소형) 07.15일 출근~","company":"소형 근무","isSub":"O","isDoc":""},{"seq":18,"name":"박상완","branch":"북서","endDate":"2024-12-17","note":"안양오피스텔 이인 (소형) 05.26일 출근~ 25-01-06 ~ 25-09-30 병가복귀","company":"소형 근무","isSub":"O","isDoc":""},{"seq":19,"name":"박영환","branch":"북서","endDate":"2025-10-02","note":"","company":"","isSub":"O","isDoc":""},{"seq":20,"name":"정택영","branch":"중부","endDate":"2025-10-20","note":"24-03-29 ~ 25-10-20 병가복귀","company":"","isSub":"X","isDoc":""},{"seq":21,"name":"김윤미","branch":"남서","endDate":"2025-11-22","note":"","company":"","isSub":"O","isDoc":""},{"seq":22,"name":"정영주","branch":"용인","endDate":"2025-12-01","note":"","company":"","isSub":"X","isDoc":""},{"seq":23,"name":"어선현","branch":"남서","endDate":"2025-10-01","note":"군포 디티엘 종합건설 (소형) 06.04일 출근~ 23년1월 가입자","company":"소형 근무","isSub":"O","isDoc":""},{"seq":24,"name":"김성종","branch":"북부","endDate":"2025-10-08","note":"09.01일 출근~ 08.22 경안종합건설 안양 이력서 선정(소형) 23년1월 가입자","company":"소형 근무","isSub":"O","isDoc":"O"},{"seq":25,"name":"엄기우","branch":"본부","endDate":"2025-11-07","note":"23년1월가입자","company":"","isSub":"O","isDoc":""},{"seq":26,"name":"최상현","branch":"북부","endDate":"2025-11-29","note":"미전종합건설 출근 (09월 19일부터)","company":"소형 근무","isSub":"O","isDoc":"O"},{"seq":27,"name":"정우열","branch":"서부","endDate":"2025-12-31","note":"23년1월가입자","company":"","isSub":"X","isDoc":"O"},{"seq":28,"name":"최명성","branch":"서부","endDate":"2026-07-21","note":"간부 인센티브 50.1%","company":"","isSub":"X","isDoc":"O"},{"seq":29,"name":"엄동기","branch":"북서","endDate":"2026-07-29","note":"유림2청사 출근 (10월 01일부터), 간부 인센티브 50.1%","company":"소형 근무","isSub":"O","isDoc":"O"},{"seq":30,"name":"김진민","branch":"동부","endDate":"2026-01-31","note":"제이에이치(소형) 출근 10월1일~","company":"소형 근무","isSub":"O","isDoc":"O"},{"seq":31,"name":"하성욱","branch":"동부","endDate":"2026-01-30","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":32,"name":"진종현","branch":"동부","endDate":"2026-02-05","note":"고덕현대 이력서 선정","company":"도평","isSub":"X","isDoc":"O"},{"seq":33,"name":"조진명","branch":"남서","endDate":"2026-02-11","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":34,"name":"김평하","branch":"용인","endDate":"2026-02-23","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":35,"name":"김시삼","branch":"남부","endDate":"2026-09-08","note":"간부 인센티브 50.1%","company":"","isSub":"X","isDoc":""},{"seq":36,"name":"최정호","branch":"북서","endDate":"2026-03-04","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":37,"name":"김영식","branch":"남부","endDate":"2026-03-06","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":38,"name":"이은호","branch":"남서","endDate":"2026-03-06","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":39,"name":"박정철","branch":"북부","endDate":"2026-03-18","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":40,"name":"정명관","branch":"동부","endDate":"2026-03-25","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":41,"name":"서문석","branch":"북서","endDate":"2026-04-03","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":42,"name":"김정호","branch":"남서","endDate":"2026-04-06","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":43,"name":"김원식","branch":"남부","endDate":"2026-04-08","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":44,"name":"황우진","branch":"동부","endDate":"2026-04-15","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":45,"name":"유영채","branch":"동부","endDate":"2026-04-15","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":46,"name":"김준형","branch":"용인","endDate":"2026-04-18","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":47,"name":"김길진","branch":"남부","endDate":"2026-04-21","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":48,"name":"이동준","branch":"서부","endDate":"2026-04-23","note":"평택두산 이력서 선정","company":"규람","isSub":"O","isDoc":"O"},{"seq":49,"name":"김정현","branch":"용인","endDate":"2026-04-25","note":"08.27일 출근~ 08.11 이천 소망종합건설 이력서 선정 (소형)","company":"소형 근무","isSub":"O","isDoc":"O"},{"seq":50,"name":"임현창","branch":"용인","endDate":"2026-04-28","note":"NRD FAB 이력서 선정","company":"신우개발","isSub":"X","isDoc":"O"},{"seq":51,"name":"유종혁","branch":"북부","endDate":"2026-04-30","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":52,"name":"천명환","branch":"용인","endDate":"2026-05-11","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":53,"name":"최현재","branch":"남서","endDate":"2026-05-12","note":"요진건설산업 9월28일 출근~","company":"소형 근무","isSub":"O","isDoc":"O"},{"seq":54,"name":"노남수","branch":"서부","endDate":"2026-05-12","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":55,"name":"전성준","branch":"용인","endDate":"2026-05-29","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":56,"name":"정종덕","branch":"동부","endDate":"2026-05-30","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":57,"name":"오정환","branch":"서부","endDate":"2025-11-21","note":"","company":"","isSub":"O","isDoc":""},{"seq":58,"name":"윤정희","branch":"남서","endDate":"2026-04-21","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":59,"name":"서두석","branch":"남부","endDate":"2026-06-15","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":60,"name":"김상궁","branch":"북서","endDate":"2026-06-26","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":61,"name":"임장현","branch":"북부","endDate":"2026-06-27","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":62,"name":"백창선","branch":"중부","endDate":"2026-07-03","note":"안양 무한건설 소형근무 2026.09.01~2026.10.31 종료","company":"소형 근무","isSub":"O","isDoc":"O"},{"seq":63,"name":"이상건","branch":"북부","endDate":"2026-07-04","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":64,"name":"최원영","branch":"북서","endDate":"2026-07-06","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":65,"name":"윤대식","branch":"북부","endDate":"2026-07-11","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":66,"name":"강의석","branch":"중부","endDate":"2026-07-11","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":67,"name":"강태규","branch":"북서","endDate":"2026-07-16","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":68,"name":"황도연","branch":"서부","endDate":"2026-05-30","note":"05.31~07.19 병가 복귀","company":"","isSub":"O","isDoc":"O"},{"seq":69,"name":"이재성","branch":"동부","endDate":"2026-07-25","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":70,"name":"구상모","branch":"북부","endDate":"2026-07-25","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":71,"name":"김재선","branch":"북부","endDate":"2026-07-27","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":72,"name":"남의송","branch":"남서","endDate":"2026-08-01","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":73,"name":"윤성우","branch":"서부","endDate":"2026-08-01","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":74,"name":"김주찬","branch":"동부","endDate":"2026-08-01","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":75,"name":"안영진","branch":"북부","endDate":"2026-08-19","note":"지오에이티 출근 (10월 01일부터)","company":"소형 근무","isSub":"O","isDoc":"O"},{"seq":76,"name":"배형만","branch":"북서","endDate":"2026-08-22","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":77,"name":"서재춘","branch":"북부","endDate":"2026-08-24","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":78,"name":"박문철","branch":"본부","endDate":"2026-08-26","note":"2026.10.30 마포 미래건설 소형 이력서 선정","company":"","isSub":"O","isDoc":"O"},{"seq":79,"name":"임대현","branch":"남부","endDate":"2026-08-26","note":"2026.10.30 송파 천지건설 소형 이력서 선정","company":"","isSub":"O","isDoc":"O"},{"seq":80,"name":"정민섭","branch":"서부","endDate":"2026-08-29","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":81,"name":"도형래","branch":"서부","endDate":"2026-08-31","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":82,"name":"김상훈","branch":"서부","endDate":"2025-11-14","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":83,"name":"강대호","branch":"동부","endDate":"2026-09-02","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":84,"name":"이원열","branch":"북서","endDate":"2026-09-08","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":85,"name":"조삼재","branch":"동부","endDate":"2026-09-09","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":86,"name":"유명화","branch":"동부","endDate":"2026-09-11","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":87,"name":"조광명","branch":"남부","endDate":"2026-09-12","note":"09월 13일 대기등록","company":"","isSub":"X","isDoc":"O"},{"seq":88,"name":"허수창","branch":"북서","endDate":"2026-09-15","note":"","company":"","isSub":"O","isDoc":"O"},{"seq":89,"name":"임재현","branch":"용인","endDate":"2026-09-15","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":90,"name":"박규원","branch":"남부","endDate":"2026-09-16","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":91,"name":"김안섭","branch":"남부","endDate":"2026-09-23","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":92,"name":"이경재","branch":"서부","endDate":"2026-09-23","note":"","company":"","isSub":"X","isDoc":"O"},{"seq":93,"name":"심창현","branch":"중부","endDate":"2026-09-30","note":"","company":"","isSub":"X","isDoc":""},{"seq":94,"name":"박성우","branch":"남서","endDate":"2026-10-02","note":"인계동 대흥 10월12일출근~","company":"소형 근무","isSub":"O","isDoc":""},{"seq":95,"name":"김효진","branch":"남부","endDate":"2026-10-08","note":"","company":"","isSub":"X","isDoc":""},{"seq":96,"name":"임한종","branch":"서부","endDate":"2026-10-12","note":"","company":"","isSub":"X","isDoc":""},{"seq":97,"name":"권희복","branch":"동부","endDate":"2026-10-14","note":"","company":"","isSub":"X","isDoc":""},{"seq":98,"name":"박종선","branch":"남서","endDate":"2026-10-15","note":"병가시작 16일부터~","company":"","isSub":"","isDoc":"O"},{"seq":99,"name":"윤소담","branch":"북서","endDate":"2026-10-19","note":"","company":"","isSub":"O","isDoc":""},{"seq":100,"name":"박근성","branch":"동부","endDate":"2026-10-20","note":"","company":"","isSub":"X","isDoc":""},{"seq":101,"name":"최영식","branch":"남서","endDate":"2026-10-21","note":"","company":"","isSub":"X","isDoc":""},{"seq":102,"name":"김태준","branch":"용인","endDate":"2026-10-22","note":"","company":"","isSub":"X","isDoc":""},{"seq":103,"name":"권강구","branch":"남부","endDate":"2026-10-23","note":"","company":"","isSub":"X","isDoc":""},{"seq":104,"name":"김부동","branch":"동부","endDate":"2026-10-24","note":"","company":"","isSub":"X","isDoc":""},{"seq":105,"name":"오세훈","branch":"남서","endDate":"2026-10-27","note":"","company":"","isSub":"X","isDoc":""},{"seq":106,"name":"김성호","branch":"북부","endDate":"2026-10-27","note":"","company":"","isSub":"O","isDoc":""},{"seq":107,"name":"김삼성","branch":"남서","endDate":"2026-10-27","note":"","company":"","isSub":"X","isDoc":""},{"seq":108,"name":"이종훈","branch":"남부","endDate":"2026-10-28","note":"","company":"","isSub":"O","isDoc":""},{"seq":109,"name":"엄동섭","branch":"북서","endDate":"2026-10-28","note":"","company":"","isSub":"X","isDoc":""},{"seq":110,"name":"오경민","branch":"남부","endDate":"2026-10-30","note":"","company":"","isSub":"O","isDoc":""}]
+[
+  {
+    "seq": 1,
+    "name": "백경용",
+    "branch": "남서",
+    "endDate": "2024-08-03",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 2,
+    "name": "이일권",
+    "branch": "서부",
+    "endDate": "2024-06-19",
+    "note": "05-13 평택 사닥다리건설 종료 (소형)",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 3,
+    "name": "양정욱",
+    "branch": "남서",
+    "endDate": "2024-10-31",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 4,
+    "name": "양성호",
+    "branch": "남서",
+    "endDate": "2024-11-07",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 5,
+    "name": "남성우",
+    "branch": "본부",
+    "endDate": "2026-02-26",
+    "note": "간부 인센티브 80%",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 6,
+    "name": "김승섭",
+    "branch": "북서",
+    "endDate": "2025-04-01",
+    "note": "03.27~05.29일 수원 세움건설 종료 (소형)",
+    "company": "소형 근무",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 7,
+    "name": "김정섭",
+    "branch": "북서",
+    "endDate": "2025-04-07",
+    "note": "의왕제일건설 이력서 선정",
+    "company": "월드타워",
+    "isSub": "",
+    "isDoc": ""
+  },
+  {
+    "seq": 8,
+    "name": "김철",
+    "branch": "남서",
+    "endDate": "2026-02-21",
+    "note": "장현 디어스이앤씨 (소형) 05.04~09.30 소형현장근무완료 / 고덕우미 이력서 선정",
+    "company": "동양",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 9,
+    "name": "송영준",
+    "branch": "서부",
+    "endDate": "2025-06-21",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 10,
+    "name": "전동환",
+    "branch": "남서",
+    "endDate": "2025-07-11",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 11,
+    "name": "임재명",
+    "branch": "동부",
+    "endDate": "2025-07-12",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 12,
+    "name": "진기수",
+    "branch": "용인",
+    "endDate": "2025-07-12",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 13,
+    "name": "이승훈",
+    "branch": "북서",
+    "endDate": "2025-07-26",
+    "note": "서초 업무시설 바론건설 이력서 선정(소형) 04.27일 출근~",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 14,
+    "name": "이훈",
+    "branch": "남서",
+    "endDate": "2025-08-11",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 15,
+    "name": "김수민",
+    "branch": "북부",
+    "endDate": "2025-08-19",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 16,
+    "name": "김경숙",
+    "branch": "중부",
+    "endDate": "2025-08-30",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 17,
+    "name": "홍대훈",
+    "branch": "본부",
+    "endDate": "2025-09-25",
+    "note": "남사읍 롯데테크 (소형) 07.15일 출근~",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 18,
+    "name": "박상완",
+    "branch": "북서",
+    "endDate": "2024-12-17",
+    "note": "안양오피스텔 이인 (소형) 05.26일 출근~ 25-01-06 ~ 25-09-30 병가복귀",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 19,
+    "name": "박영환",
+    "branch": "북서",
+    "endDate": "2025-10-02",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 20,
+    "name": "정택영",
+    "branch": "중부",
+    "endDate": "2025-10-20",
+    "note": "24-03-29 ~ 25-10-20 병가복귀",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 21,
+    "name": "김윤미",
+    "branch": "남서",
+    "endDate": "2025-11-22",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 22,
+    "name": "정영주",
+    "branch": "용인",
+    "endDate": "2025-12-01",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 23,
+    "name": "어선현",
+    "branch": "남서",
+    "endDate": "2025-10-01",
+    "note": "군포 디티엘 종합건설 (소형) 06.04일 출근~ 23년1월 가입자",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 24,
+    "name": "김성종",
+    "branch": "북부",
+    "endDate": "2025-10-08",
+    "note": "09.01일 출근~ 08.22 경안종합건설 안양 이력서 선정(소형) 23년1월 가입자",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 25,
+    "name": "엄기우",
+    "branch": "본부",
+    "endDate": "2025-11-07",
+    "note": "23년1월가입자",
+    "company": "",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 26,
+    "name": "최상현",
+    "branch": "북부",
+    "endDate": "2025-11-29",
+    "note": "미전종합건설 출근 (09월 19일부터)",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 27,
+    "name": "정우열",
+    "branch": "서부",
+    "endDate": "2025-12-31",
+    "note": "23년1월가입자",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 28,
+    "name": "최명성",
+    "branch": "서부",
+    "endDate": "2026-07-21",
+    "note": "간부 인센티브 50.1%",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 29,
+    "name": "엄동기",
+    "branch": "북서",
+    "endDate": "2026-07-29",
+    "note": "유림2청사 출근 (10월 01일부터), 간부 인센티브 50.1%",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 30,
+    "name": "김진민",
+    "branch": "동부",
+    "endDate": "2026-01-31",
+    "note": "제이에이치(소형) 출근 10월1일~",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 31,
+    "name": "하성욱",
+    "branch": "동부",
+    "endDate": "2026-01-30",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 32,
+    "name": "진종현",
+    "branch": "동부",
+    "endDate": "2026-02-05",
+    "note": "고덕현대 이력서 선정",
+    "company": "도평",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 33,
+    "name": "조진명",
+    "branch": "남서",
+    "endDate": "2026-02-11",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 34,
+    "name": "김평하",
+    "branch": "용인",
+    "endDate": "2026-02-23",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 35,
+    "name": "김시삼",
+    "branch": "남부",
+    "endDate": "2026-09-08",
+    "note": "간부 인센티브 50.1%",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 36,
+    "name": "최정호",
+    "branch": "북서",
+    "endDate": "2026-03-04",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 37,
+    "name": "김영식",
+    "branch": "남부",
+    "endDate": "2026-03-06",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 38,
+    "name": "이은호",
+    "branch": "남서",
+    "endDate": "2026-03-06",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 39,
+    "name": "박정철",
+    "branch": "북부",
+    "endDate": "2026-03-18",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 40,
+    "name": "정명관",
+    "branch": "동부",
+    "endDate": "2026-03-25",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 41,
+    "name": "서문석",
+    "branch": "북서",
+    "endDate": "2026-04-03",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 42,
+    "name": "김정호",
+    "branch": "남서",
+    "endDate": "2026-04-06",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 43,
+    "name": "김원식",
+    "branch": "남부",
+    "endDate": "2026-04-08",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 44,
+    "name": "황우진",
+    "branch": "동부",
+    "endDate": "2026-04-15",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 45,
+    "name": "유영채",
+    "branch": "동부",
+    "endDate": "2026-04-15",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 46,
+    "name": "김준형",
+    "branch": "용인",
+    "endDate": "2026-04-18",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 47,
+    "name": "김길진",
+    "branch": "남부",
+    "endDate": "2026-04-21",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 48,
+    "name": "이동준",
+    "branch": "서부",
+    "endDate": "2026-04-23",
+    "note": "평택두산 이력서 선정",
+    "company": "규람",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 49,
+    "name": "김정현",
+    "branch": "용인",
+    "endDate": "2026-04-25",
+    "note": "08.27일 출근~ 08.11 이천 소망종합건설 이력서 선정 (소형)",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 50,
+    "name": "임현창",
+    "branch": "용인",
+    "endDate": "2026-04-28",
+    "note": "NRD FAB 이력서 선정",
+    "company": "신우개발",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 51,
+    "name": "유종혁",
+    "branch": "북부",
+    "endDate": "2026-04-30",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 52,
+    "name": "천명환",
+    "branch": "용인",
+    "endDate": "2026-05-11",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 53,
+    "name": "최현재",
+    "branch": "남서",
+    "endDate": "2026-05-12",
+    "note": "요진건설산업 9월28일 출근~",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 54,
+    "name": "노남수",
+    "branch": "서부",
+    "endDate": "2026-05-12",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 55,
+    "name": "전성준",
+    "branch": "용인",
+    "endDate": "2026-05-29",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 56,
+    "name": "정종덕",
+    "branch": "동부",
+    "endDate": "2026-05-30",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 57,
+    "name": "오정환",
+    "branch": "서부",
+    "endDate": "2025-11-21",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 58,
+    "name": "윤정희",
+    "branch": "남서",
+    "endDate": "2026-04-21",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 59,
+    "name": "서두석",
+    "branch": "남부",
+    "endDate": "2026-06-15",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 60,
+    "name": "김상궁",
+    "branch": "북서",
+    "endDate": "2026-06-26",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 61,
+    "name": "임장현",
+    "branch": "북부",
+    "endDate": "2026-06-27",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 62,
+    "name": "백창선",
+    "branch": "중부",
+    "endDate": "2026-07-03",
+    "note": "안양 무한건설 소형근무 2026.09.01~2026.10.31 종료",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 63,
+    "name": "이상건",
+    "branch": "북부",
+    "endDate": "2026-07-04",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 64,
+    "name": "최원영",
+    "branch": "북서",
+    "endDate": "2026-07-06",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 65,
+    "name": "윤대식",
+    "branch": "북부",
+    "endDate": "2026-07-11",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 66,
+    "name": "강의석",
+    "branch": "중부",
+    "endDate": "2026-07-11",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 67,
+    "name": "강태규",
+    "branch": "북서",
+    "endDate": "2026-07-16",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 68,
+    "name": "황도연",
+    "branch": "서부",
+    "endDate": "2026-05-30",
+    "note": "05.31~07.19 병가 복귀",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 69,
+    "name": "이재성",
+    "branch": "동부",
+    "endDate": "2026-07-25",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 70,
+    "name": "구상모",
+    "branch": "북부",
+    "endDate": "2026-07-25",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 71,
+    "name": "김재선",
+    "branch": "북부",
+    "endDate": "2026-07-27",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 72,
+    "name": "남의송",
+    "branch": "남서",
+    "endDate": "2026-08-01",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 73,
+    "name": "윤성우",
+    "branch": "서부",
+    "endDate": "2026-08-01",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 74,
+    "name": "김주찬",
+    "branch": "동부",
+    "endDate": "2026-08-01",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 75,
+    "name": "안영진",
+    "branch": "북부",
+    "endDate": "2026-08-19",
+    "note": "지오에이티 출근 (10월 01일부터)",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 76,
+    "name": "배형만",
+    "branch": "북서",
+    "endDate": "2026-08-22",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 77,
+    "name": "서재춘",
+    "branch": "북부",
+    "endDate": "2026-08-24",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 78,
+    "name": "박문철",
+    "branch": "본부",
+    "endDate": "2026-08-26",
+    "note": "2026.10.30 마포 미래건설 소형 이력서 선정",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 79,
+    "name": "임대현",
+    "branch": "남부",
+    "endDate": "2026-08-26",
+    "note": "2026.10.30 송파 천지건설 소형 이력서 선정",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 80,
+    "name": "정민섭",
+    "branch": "서부",
+    "endDate": "2026-08-29",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 81,
+    "name": "도형래",
+    "branch": "서부",
+    "endDate": "2026-08-31",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 82,
+    "name": "김상훈",
+    "branch": "서부",
+    "endDate": "2025-11-14",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 83,
+    "name": "강대호",
+    "branch": "동부",
+    "endDate": "2026-09-02",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 84,
+    "name": "이원열",
+    "branch": "북서",
+    "endDate": "2026-09-08",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 85,
+    "name": "조삼재",
+    "branch": "동부",
+    "endDate": "2026-09-09",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 86,
+    "name": "유명화",
+    "branch": "동부",
+    "endDate": "2026-09-11",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 87,
+    "name": "조광명",
+    "branch": "남부",
+    "endDate": "2026-09-12",
+    "note": "09월 13일 대기등록",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 88,
+    "name": "허수창",
+    "branch": "북서",
+    "endDate": "2026-09-15",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": "O"
+  },
+  {
+    "seq": 89,
+    "name": "임재현",
+    "branch": "용인",
+    "endDate": "2026-09-15",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 90,
+    "name": "박규원",
+    "branch": "남부",
+    "endDate": "2026-09-16",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 91,
+    "name": "김안섭",
+    "branch": "남부",
+    "endDate": "2026-09-23",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 92,
+    "name": "이경재",
+    "branch": "서부",
+    "endDate": "2026-09-23",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 93,
+    "name": "심창현",
+    "branch": "중부",
+    "endDate": "2026-09-30",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 94,
+    "name": "박성우",
+    "branch": "남서",
+    "endDate": "2026-10-02",
+    "note": "인계동 대흥 10월12일출근~",
+    "company": "소형 근무",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 95,
+    "name": "김효진",
+    "branch": "남부",
+    "endDate": "2026-10-08",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 96,
+    "name": "임한종",
+    "branch": "서부",
+    "endDate": "2026-10-12",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 97,
+    "name": "권희복",
+    "branch": "동부",
+    "endDate": "2026-10-14",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 98,
+    "name": "박종선",
+    "branch": "남서",
+    "endDate": "2026-10-15",
+    "note": "병가시작 16일부터~",
+    "company": "",
+    "isSub": "",
+    "isDoc": "O"
+  },
+  {
+    "seq": 99,
+    "name": "윤소담",
+    "branch": "북서",
+    "endDate": "2026-10-19",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 100,
+    "name": "박근성",
+    "branch": "동부",
+    "endDate": "2026-10-20",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 101,
+    "name": "최영식",
+    "branch": "남서",
+    "endDate": "2026-10-21",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": "O"
+  },
+  {
+    "seq": 102,
+    "name": "김태준",
+    "branch": "용인",
+    "endDate": "2026-10-22",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 103,
+    "name": "권강구",
+    "branch": "남부",
+    "endDate": "2026-10-23",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 104,
+    "name": "김부동",
+    "branch": "동부",
+    "endDate": "2026-10-24",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 105,
+    "name": "오세훈",
+    "branch": "남서",
+    "endDate": "2026-10-27",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 106,
+    "name": "김성호",
+    "branch": "북부",
+    "endDate": "2026-10-27",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 107,
+    "name": "김삼성",
+    "branch": "남서",
+    "endDate": "2026-10-27",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 108,
+    "name": "이종훈",
+    "branch": "남부",
+    "endDate": "2026-10-28",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": ""
+  },
+  {
+    "seq": 109,
+    "name": "엄동섭",
+    "branch": "북서",
+    "endDate": "2026-10-28",
+    "note": "",
+    "company": "",
+    "isSub": "X",
+    "isDoc": ""
+  },
+  {
+    "seq": 110,
+    "name": "오경민",
+    "branch": "남부",
+    "endDate": "2026-10-30",
+    "note": "",
+    "company": "",
+    "isSub": "O",
+    "isDoc": ""
+  }
+]
