@@ -15,7 +15,7 @@
     "branch": "서부",
     "endDate": "2024-06-19",
     "note": "05-13 평택 사닥다리건설 종료 (소형)",
-    "company": "",
+    "company": "소형 근무",
     "isSub": "O",
     "isDoc": ""
   },
@@ -55,7 +55,7 @@
     "branch": "북서",
     "endDate": "2025-04-01",
     "note": "03.27~05.29일 수원 세움건설 종료 (소형)",
-    "company": "",
+    "company": "소형 근무",
     "isSub": "X",
     "isDoc": ""
   },
@@ -295,7 +295,7 @@
     "branch": "동부",
     "endDate": "2026-01-31",
     "note": "제이에이치(소형) 출근 10월1일~",
-    "company": "",
+    "company": "소형 근무",
     "isSub": "O",
     "isDoc": "O"
   },
