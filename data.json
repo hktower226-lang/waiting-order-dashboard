@@ -1088,5 +1088,15 @@
     "company": "",
     "isSub": "X",
     "isDoc": ""
+  },
+  {
+    "seq": 110,
+    "name": "오경민",
+    "branch": "남부",
+    "endDate": "2026-10-30",
+    "note": "",
+    "company": "",
+    "isSub": "",
+    "isDoc": ""
   }
 ]
