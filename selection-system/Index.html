@@ -29,9 +29,6 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 .phone-link{display:inline-block;padding:8px 12px;border-radius:8px;color:#144aa0;background:#e7f1ff;font-weight:700;text-decoration:none}
 .cancel-panel{border:1px solid #d5e1ed;border-radius:10px;padding:13px;margin-top:16px;background:#f8fafc}
 .cancel-panel button{background:#475569;margin-top:10px}
-#cancelTicket{border:1px solid #b8dbbf;background:#effbf0;border-radius:9px;padding:12px;margin-top:12px}
-.cancel-code{display:block;overflow-wrap:anywhere;padding:9px;margin:9px 0;background:white;border:1px solid #d2e4d4;border-radius:8px;font-size:12px}
-#copyCode{background:#64748b}
 #adminCard{display:none}
 .admin-item{border:1px solid #dce4ed;border-radius:10px;padding:12px;margin:10px 0;background:#f8fafc}
 .admin-item input{margin-top:6px}
@@ -64,17 +61,13 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <label style="font-weight:400"><input id="consent" type="checkbox" style="width:auto;margin-right:7px">표시된 대기자 본인이 신청하는 것임을 확인합니다.</label>
 <button id="send" disabled>희망 신청</button>
 <div id="message" aria-live="polite"></div>
-<div id="cancelTicket" style="display:none">
- <b>신청 완료 · 취소코드 보관</b>
- <p>접수 취소 시 필요한 본인 전용 코드입니다. 다른 사람에게 공유하지 마세요.</p>
- <span id="ticketText" class="cancel-code"></span>
- <button id="copyCode" type="button">취소코드 복사</button>
-</div>
 <div class="cancel-panel">
  <h2>희망 신청 취소</h2>
  <p>일반 희망 신청은 마감 전까지 취소할 수 있습니다. 이력서 선정 후에도 본인 취소코드로 선정을 취소할 수 있습니다.</p>
- <label for="cancelCode">본인 취소코드</label>
- <input id="cancelCode" type="text" autocomplete="off" placeholder="신청 후 받은 취소코드 입력">
+ <label for="cancelName">신청자 성명</label>
+ <input id="cancelName" type="text" autocomplete="name" placeholder="접수한 이름 입력" maxlength="40">
+ <label for="cancelBirth">생년월일 6자리 (YYMMDD)</label>
+ <input id="cancelBirth" type="text" inputmode="numeric" autocomplete="off" placeholder="예: 790101" maxlength="6">
  <button id="cancelSend" type="button">희망 신청 취소</button>
  <p id="cancelMessage" aria-live="polite"></p>
 </div>
@@ -233,31 +226,23 @@ function searchNames(){
 }
 el('nameSearch').oninput=function(){clearTimeout(searchDelay);searchDelay=setTimeout(searchNames,250)};
 el('reload').onclick=refresh;
-var cancelStorageKey='waiting-select-cancel:'+NOTICE_ID;
-var lastCancelCode='';
-try { lastCancelCode=localStorage.getItem(cancelStorageKey)||''; }catch(e){}
-if(lastCancelCode)el('cancelCode').value=lastCancelCode;
-el('copyCode').onclick=function(){
- var code=el('ticketText').textContent;
- if(!code)return;
- if(navigator.clipboard&&navigator.clipboard.writeText){
-  navigator.clipboard.writeText(code).then(function(){el('message').textContent='취소코드가 복사되었습니다.';},
-    function(){el('message').textContent='취소코드를 길게 눌러 복사해주세요.';});
- }else{el('message').textContent='취소코드를 길게 눌러 복사해주세요.';}
-};
 el('cancelSend').onclick=function(){
- var code=el('cancelCode').value.trim();
- if(!code){el('cancelMessage').textContent='본인 취소코드를 입력해주세요.';return;}
+ var name=el('cancelName').value.trim();
+ var birth6=el('cancelBirth').value.trim();
+ if(!name||!/^[0-9]{6}$/.test(birth6)){
+  el('cancelMessage').textContent='신청자 성명과 생년월일 6자리(YYMMDD)를 입력해주세요.';
+  return;
+ }
  if(!confirm('이 공고의 희망 신청 또는 이력서 선정을 취소하시겠습니까?'))return;
  var btn=el('cancelSend');btn.disabled=true;el('cancelMessage').textContent='취소 처리 중...';
  google.script.run.withSuccessHandler(function(r){
   btn.disabled=false;el('cancelMessage').textContent=r.message;
-  el('cancelCode').value='';el('cancelTicket').style.display='none';
-  try{localStorage.removeItem(cancelStorageKey);}catch(e){}
+  el('cancelName').value='';
+  el('cancelBirth').value='';
   refresh();
  }).withFailureHandler(function(e){
   btn.disabled=false;el('cancelMessage').textContent=e.message||String(e);
- }).cancelApplicant(NOTICE_ID,code);
+ }).cancelApplicant(NOTICE_ID,name,birth6);
 };
 el('send').onclick=function(){
  if(!state||!state.accepting||!selected||submitting)return;
@@ -265,12 +250,6 @@ el('send').onclick=function(){
  submitting=true;el('send').disabled=true;el('message').textContent='접수 중...';
  google.script.run.withSuccessHandler(function(r){
   submitting=false;el('message').textContent=r.message;selected=null;
-  if(r.cancelCode){
-    el('cancelCode').value=r.cancelCode;
-    el('ticketText').textContent=r.cancelCode;
-    el('cancelTicket').style.display='block';
-    try{localStorage.setItem(cancelStorageKey,r.cancelCode);}catch(e){}
-  }
   el('nameSearch').value='';el('chosen').style.display='none';refresh();
  }).withFailureHandler(function(e){
   submitting=false;el('message').textContent=e.message||String(e);
