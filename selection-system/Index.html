@@ -33,12 +33,10 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <div class="eyebrow">한국타워크레인조종사노동조합 · 경기지역본부</div>
 <h1 id="project">공고를 불러오는 중...</h1>
 <p id="status" class="status">연결 중</p>
-<div class="meta" id="facts"></div>
-<div id="notes"></div>
 <div id="smallNotice" class="small-notice" style="display:none">📌 <b>소형 이력서 지원 안내</b>
 <div>소형근무 희망자에 한해 선정하며, 대기기간 중 1회만 지원할 수 있습니다. 소형근무 중에도 대기순번 변동사항에 따라 순번은 상승하되 최대 10번까지만 상승합니다.</div></div>
 <div id="contact" style="display:none"></div>
-<a id="rankLink" class="rank-link" target="_blank" rel="noopener" style="display:none">📋 전체 대기순번 확인</a>
+<a id="rankLink" class="rank-link" target="_blank" rel="noopener" style="display:none">📋 희망자 선순위 바로보기</a>
 <div class="warn"><b>접수 마감:</b> <span id="deadline">확인 중</span><div id="remain" style="margin-top:5px"></div></div>
 </div>
 <div class="card" id="applyCard">
@@ -54,15 +52,11 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <div id="message" aria-live="polite"></div>
 </div>
 <div class="card" id="rankingCard">
-<h2>실시간 희망자 우선순위 · <span id="total">0명</span></h2>
-<p><small>대기순번 오름차순으로 표시합니다. 순위는 약 15초마다 갱신되며, 최종 선정은 관리자의 자격 및 이의 확인 후 확정됩니다.</small></p>
+<h2>희망자 선순위 · <span id="total">0명</span></h2>
+<p><small>접수자만 대기순번 오름차순으로 표시합니다. 최종 선정은 관리자 확인 후 확정됩니다.</small></p>
 <div id="people" aria-live="polite">불러오는 중...</div>
 <button id="reload" style="background:#64748b;margin-top:10px">지금 새로고침</button>
-</div>
-<div class="card" id="allRanking" style="display:none">
-<h2>전체 대기순번</h2>
-<p><small>현재 대기순번 현황판 기준으로 표시됩니다.</small></p>
-<div id="waitingRanks"></div>
+<a id="backLink" class="rank-link">← 이력서 신청 화면으로</a>
 </div>
 </main>
 <script>
@@ -89,13 +83,6 @@ function render(result){
  el('project').textContent=n.project;
  el('status').textContent=result.accepting?'희망 신청 접수 중':(result.configured?'접수 마감':'공고 미개통');
  el('deadline').textContent=fmt(n.deadline);
- el('facts').replaceChildren();
- [['주소',n.site],['임대사',n.rental],['급여',n.wage],['층수',n.floors],['장비',n.machine],['설치 예정',n.plannedInstallation],['출근 예정',n.startCondition],['예상 사용기간',n.duration]].forEach(function(pair){
-  var d=document.createElement('div'),a=document.createElement('span'),b=document.createElement('b');
-  a.textContent=pair[0];b.textContent=pair[1]||'-';d.append(a,b);el('facts').appendChild(d);
- });
- el('notes').replaceChildren();
- (n.notes||[]).forEach(function(t){el('notes').appendChild(para('• '+t))});
  el('smallNotice').style.display=n.type==='small'?'block':'none';
  if(n.contact&&n.contact.name){
   el('contact').style.display='block';
@@ -114,13 +101,10 @@ function render(result){
  el('send').disabled=!result.accepting||!selected||submitting;
  if(VIEW==='ranking'){
   el('applyCard').style.display='none';
-  el('allRanking').style.display='block';
-  el('waitingRanks').replaceChildren();
-  (result.waitingRanks||[]).forEach(function(r){
-   var row=document.createElement('div'),a=document.createElement('span'),b=document.createElement('b');
-   row.className='row';a.className='tag';a.textContent=String(r.seq)+'번';b.textContent=r.name+' ('+r.branch+')';
-   row.append(a,b);el('waitingRanks').appendChild(row);
-  });
+  el('rankLink').style.display='none';
+  el('rankingCard').style.display='block';
+ } else {
+  el('rankingCard').style.display='none';
  }
  tick();
 }
@@ -148,6 +132,7 @@ function searchNames(){
 }
 el('nameSearch').oninput=function(){clearTimeout(searchDelay);searchDelay=setTimeout(searchNames,250)};
 el('reload').onclick=refresh;
+el('backLink').href=window.location.href.replace(/&view=ranking|\?view=ranking&?/,'');
 el('send').onclick=function(){
  if(!state||!state.accepting||!selected||submitting)return;
  if(!el('consent').checked){el('message').textContent='본인 신청 확인을 체크해주세요.';return}
