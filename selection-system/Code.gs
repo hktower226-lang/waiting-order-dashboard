@@ -97,25 +97,40 @@ function selectedRecord_(rows,p,excludeRow) {
   return rows.find((r,i)=>i+2!==excludeRow &&
     String(r[5]).trim()==='선정' && sameApplicant_(r,p));
 }
-function searchMembers(query, noticeId) {
+/**
+ * 검색용 명단은 최초 접속/분당 갱신 때 한 번 내려준다.
+ * 입력 중 매 글자마다 Google Sheet·GitHub 조회를 호출하지 않는다.
+ * 최종 신청 시 submitApplicant()에서 실시간 자격과 중복 선정을 다시 검사한다.
+ */
+function getSearchIndex(noticeId) {
   const notice=notice_(assertId_(noticeId));
-  const q=String(query||'').trim().replace(/\s+/g,'');
-  if(q.length<1||q.length>30)return [];
-  const matches=roster_().filter(r=>{
-    const name=String(r.name||'').replace(/\s+/g,'');
-    return name.startsWith(q)||hangulInitials_(name).startsWith(q);
-  });
   const selectedRows=sheet_().getDataRange().getValues().slice(1);
-  return matches.map(r=>{
+  return roster_().map(r=>{
     let allowed=true, reason='';
-    try{
+    try {
       checkApplicant_(r,notice);
       if(selectedRecord_(selectedRows,r))
         throw new Error('다른 공고에서 이력서 선정된 상태입니다. 선정 취소 후 신청할 수 있습니다.');
-    }catch(e){allowed=false;reason=e.message||'지원 불가';}
-    return {key:memberKey_(r),name:String(r.name),branch:String(r.branch),
-      seq:r.seq,allowed:allowed,reason:reason};
+    } catch(e) {
+      allowed=false;
+      reason=e.message||'지원 불가';
+    }
+    return {
+      key:memberKey_(r),name:String(r.name),branch:String(r.branch),
+      seq:r.seq,initials:hangulInitials_(r.name),
+      allowed:allowed,reason:reason
+    };
   });
+}
+
+// 구 버전 화면과의 호환성을 위해 유지.
+function searchMembers(query, noticeId) {
+  const q=String(query||'').trim().replace(/\s+/g,'');
+  if(q.length<1||q.length>30)return [];
+  return getSearchIndex(noticeId).filter(p=>
+    String(p.name).replace(/\s+/g,'').startsWith(q) ||
+    String(p.initials).startsWith(q)
+  );
 }
 function hashCancelCode_(code) {
   const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,
