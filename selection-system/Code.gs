@@ -134,40 +134,20 @@ function resolveContact_(n) {
   return contact;
 }
 function smallNoteFlags_(person) {
-  // 비고에서 명확히 표시된 내용만 활용한다. 날짜/문맥이 불명확하면 판단하지 않는다.
+  // '신청'과 '선정'은 근무 이력이 아니다. 비고에 실제 근무 중/완료가 명확할 때만 제한한다.
   const note=String(person.note||'').replace(/\s+/g,'');
-  const completed=/소형(?:현장)?근무(?:완료|종료)|소형[^/]{0,20}근무완료/.test(note);
+  const completed=/소형(?:현장)?근무(?:완료|종료)|소형근무[^/]{0,45}(?:완료|종료)/.test(note);
   const working=/소형(?:현장)?근무중|소형근무진행중/.test(note);
-  const used=/소형이력서선정|이력서선정\(소형\)/.test(note);
-  return {completed,working,used};
+  return {completed,working};
 }
 function checkApplicant_(person,notice) {
   const flags=smallNoteFlags_(person);
   if(noticeType_(notice)==='small') {
     if(person.isSub!=='O')throw new Error('소형근무 희망자(O)만 신청 가능합니다. 활동 미희망자는 신청할 수 없습니다.');
     if(flags.completed||flags.working)throw new Error('기존 비고상 소형근무 중 또는 완료로 표시되어 신청할 수 없습니다.');
-    if(flags.used)throw new Error('기존 비고에 소형 이력서 선정 이력이 있어 중복 신청할 수 없습니다.');
   } else if(flags.working) {
     throw new Error('기존 비고상 소형근무 중이므로 대형 이력서 선정에 지원할 수 없습니다.');
   }
-}
-function alreadyAppliedForSmall_(sheet,person) {
-  // 이 접수 시스템에 기록된 소형 지원 이력만 검사; 과거 외부 지원은 기존 비고 확인.
-  const rows=sheet.getDataRange().getValues().slice(1);
-  const currentKey=memberKey_(person);
-  for(const r of rows){
-    // 소형 이력서 신청 1회 제한: 취소한 접수도 해당 대기기간의 지원 이력으로 유지.
-    if(!['접수','취소','반려'].includes(String(r[5])))continue;
-    if(String(r[2]).trim()!==String(person.name).trim() ||
-       normalizeBranch_(r[3])!==normalizeBranch_(person.branch))continue;
-    if(r[7]&&String(r[7]).trim()!==String(person.endDate||'').trim())continue;
-    let small=String(r[6]).toLowerCase()==='small';
-    if(!small&&!r[6]) {
-      try {small=noticeType_(notice_(String(r[1])))==='small';}catch(e) {}
-    }
-    if(small)return true;
-  }
-  return false;
 }
 function getState(id) {
   const n = notice_(id);
@@ -220,11 +200,9 @@ function submitApplicant(id, memberKey, consent) {
       normalizeBranch_(r[3])===normalizeBranch_(person.branch) &&
       String(r[5])==='접수');
     if(duplicate)throw new Error('이미 접수된 조합원입니다.');
-    if(noticeType_(n)==='small'&&alreadyAppliedForSmall_(sheet,person))
-      throw new Error('이번 대기기간 소형 이력서 지원 기록이 있어 재지원할 수 없습니다.');
     if(Date.now()>=new Date(n.deadline).getTime())
       throw new Error('접수 마감시간이 지났습니다.');
-    // 기존 시트의 A~F열을 유지하고, 소형 지원 이력용 G/H열을 사용.
+    // 기존 시트 A~F열 유지. G/H열은 모집유형/대기회차 기록용이며 신청 횟수 제한에 사용하지 않는다.
     if(!sheet.getRange('G1').getValue())sheet.getRange('G1').setValue('모집유형');
     if(!sheet.getRange('H1').getValue())sheet.getRange('H1').setValue('대기회차 종료일');
     if(!sheet.getRange('I1').getValue())sheet.getRange('I1').setValue('취소코드 해시');
