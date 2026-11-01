@@ -12,13 +12,17 @@ const DEFAULT_NOTICE = '2026-10-29-umi36bl';
 function setup() {
   const props = PropertiesService.getScriptProperties();
   const oldId = props.getProperty(SHEET_PROP);
-  if (oldId) return '접수 저장 시트: https://docs.google.com/spreadsheets/d/' + oldId + '/edit';
+  if (oldId) {
+    setupEligibility_();
+    return '접수 저장 시트: https://docs.google.com/spreadsheets/d/' + oldId + '/edit';
+  }
   const book = SpreadsheetApp.create('경기지역본부 이력서 선정 희망자 접수');
   const sheet = book.getSheets()[0];
   sheet.setName('희망접수');
   sheet.appendRow(['접수시각', '공고ID', '성명', '지부', '접수당시 대기순번', '상태']);
   sheet.setFrozenRows(1);
   props.setProperty(SHEET_PROP, book.getId());
+  setupEligibility_();
   return '설정 완료: ' + book.getUrl();
 }
 
@@ -54,6 +58,74 @@ function notice_(id) {
 }
 function roster_() {
   return getJson_('data.json');
+}
+function setupEligibility_() {
+  const book = sheet_().getParent();
+  let sh = book.getSheetByName('소형이력관리');
+  if (!sh) {
+    sh = book.insertSheet('소형이력관리');
+    sh.appendRow(['성명','소속지부','대기회차(종료일)','소형근무상태','이번대기 소형지원횟수','관리자 비고']);
+    sh.setFrozenRows(1);
+    // 없는 이력을 '없음'으로 간주하지 않음. 관리자가 모든 신규 행 검증해야 함.
+  }
+  let contacts = book.getSheetByName('공고담당자');
+  if (!contacts) {
+    contacts = book.insertSheet('공고담당자');
+    contacts.appendRow(['지부','담당자 성명','직책','업무용 연락처','공개승인(O/X)']);
+    contacts.setFrozenRows(1);
+  }
+  const colHeaders = sheet_().getRange(1,1,1,8).getValues()[0];
+  if (!colHeaders[6]) sheet_().getRange('G1').setValue('모집유형');
+  if (!colHeaders[7]) sheet_().getRange('H1').setValue('대기회차');
+  return '소형이력관리/공고담당자 시트 준비됨. 소형이력은 관리자가 검증 후 행을 추가하세요.';
+}
+function workHistorySheet_() {
+  const sh=sheet_().getParent().getSheetByName('소형이력관리');
+  if (!sh) throw new Error('관리자가 소형근무 이력관리 시트를 아직 생성하지 않았습니다.');
+  return sh;
+}
+function workHistory_(person, branch) {
+  const sh=workHistorySheet_();
+  const rows=sh.getLastRow()>1 ? sh.getRange(2,1,sh.getLastRow()-1,6).getDisplayValues() : [];
+  const matches=rows.map((r,i)=>({row:r,index:i+2})).filter(x=>
+    String(x.row[0]).trim()===String(person.name).trim() &&
+    normalizeBranch_(x.row[1])===normalizeBranch_(branch));
+  if (matches.length!==1) return {status:'확인필요',reason:'소형근무 이력에 대해 관리자의 확인이 필요합니다.'};
+  const r=matches[0].row;
+  // 기다림 회차가 바뀌면 이력의 일회성 자격을 자동 초기화하지 않음
+  if (String(r[2]).trim()!==String(person.endDate||'').trim()) {
+    return {status:'확인필요',reason:'대기등록 회차 정보가 달라 관리자 확인이 필요합니다.'};
+  }
+  const allowed=['미사용','근무중','완료','확인필요'];
+  if (!allowed.includes(r[3]))return {status:'확인필요',reason:'소형근무 상태가 확인되지 않았습니다.'};
+  const count=Number(r[4]);
+  if (!Number.isInteger(count) || count<0) return {status:'확인필요',reason:'이번 대기기간 소형지원횟수를 확인해주세요.'};
+  return {status:r[3],count:count,row:matches[0].index,reason:''};
+}
+function contactForNotice_(notice) {
+  const branch=normalizeBranch_(notice.contactBranch||notice.branch);
+  if (!branch) return null;
+  const sh=sheet_().getParent().getSheetByName('공고담당자');
+  if (!sh || sh.getLastRow()<2) return {branch:branch};
+  const matches=sh.getRange(2,1,sh.getLastRow()-1,5).getDisplayValues()
+    .filter(r=>normalizeBranch_(r[0])===branch && String(r[4]).trim().toUpperCase()==='O');
+  if (matches.length!==1)return {branch:branch};
+  const r=matches[0];
+  return {branch:branch,name:String(r[1]||''),role:String(r[2]||''),phone:String(r[3]||'')};
+}
+function checkEligibility_(person, branch, notice) {
+  const kind=notice.type==='small'?'small':'large';
+  const hist=workHistory_(person,branch);
+  if (hist.status==='확인필요') throw new Error(hist.reason);
+  if (kind==='large') {
+    if (hist.status==='근무중') throw new Error('현재 소형근무 중이므로 대형 이력서 선정에 지원할 수 없습니다.');
+    return hist;
+  }
+  if (person.isSub!=='O') throw new Error('소형근무 희망자(O)만 신청할 수 있습니다.');
+  if (hist.status==='근무중') throw new Error('현재 소형근무 중으로 소형 이력서에 다시 지원할 수 없습니다.');
+  if (hist.status==='완료') throw new Error('소형근무 완료자는 같은 대기기간에 소형 이력서를 다시 지원할 수 없습니다.');
+  if (hist.count>=1) throw new Error('대기기간 중 소형 이력서 지원은 1회만 가능합니다.');
+  return hist;
 }
 function sheet_() {
   const id = PropertiesService.getScriptProperties().getProperty(SHEET_PROP);
@@ -148,10 +220,17 @@ function getState(id) {
       id:n.id, project:n.project, site:n.site, rental:n.rental,
       wage:n.wage, floors:n.floors, machine:n.machine,
       plannedInstallation:n.plannedInstallation, startCondition:n.startCondition,
-      duration:n.duration, notes:n.notes || [], deadline:n.deadline
+      duration:n.duration, notes:n.notes || [], deadline:n.deadline,
+      type:n.type==='small'?'small':'large',
+      branch:normalizeBranch_(n.branch||n.contactBranch||''),
+      contact:contactForNotice_(n),
+      rankingUrl:n.rankingUrl||''
     },
     accepting: isOpen, configured: n.status === 'open',
     now: new Date(now).toISOString(), participants:people,
+    waitingRanks:roster.map(r=>({seq:r.seq,name:r.name,branch:r.branch}))
+      .filter(r=>Number.isFinite(Number(r.seq)))
+      .sort((a,b)=>Number(a.seq)-Number(b.seq)),
     total:people.length
   };
 }
@@ -182,6 +261,8 @@ function submitApplicant(id, name, branch, birth6, consent) {
       throw new Error('조합원 인증정보가 일치하지 않습니다. 성명·지부·생년월일을 확인해주세요.');
     }
     successfulAttempt_(key);
+    // 개인정보 인증이 끝난 뒤에도 서버에서 모집유형별 지원자격을 검사한다.
+    const history=checkEligibility_(person,branch,n);
     const sheet = sheet_();
     const rows = sheet.getDataRange().getValues().slice(1);
     const duplicate = rows.some(r => String(r[1]) === id &&
@@ -191,7 +272,14 @@ function submitApplicant(id, name, branch, birth6, consent) {
     if (Date.now() >= new Date(n.deadline).getTime()) {
       throw new Error('접수 마감시간이 지났습니다.');
     }
-    sheet.appendRow([new Date(), id, name, branch, Number(person.seq), '접수']);
+    // 마감 직전에도 제출 시각과 이력을 재확인
+    if (Date.now() >= new Date(n.deadline).getTime()) throw new Error('접수 마감시간이 지났습니다.');
+    sheet.appendRow([new Date(), id, name, branch, Number(person.seq), '접수',
+      n.type==='small'?'small':'large', String(person.endDate||'')]);
+    if (n.type==='small') {
+      const ws=workHistorySheet_();
+      ws.getRange(history.row,5).setValue(history.count+1);
+    }
     return {ok:true, message:'희망 신청이 접수되었습니다.'};
   } finally {
     lock.releaseLock();
