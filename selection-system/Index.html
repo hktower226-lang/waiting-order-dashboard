@@ -52,7 +52,7 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <div class="card">
 <div class="eyebrow">한국타워크레인조종사노동조합 · 경기지역본부</div>
 <h1 id="project">공고를 불러오는 중...</h1>
-<p id="status" class="status">연결 중</p>
+
 <div id="smallNotice" class="small-notice" style="display:none">📌 소형근무 희망 O만 신청 가능합니다. 이력서 신청 횟수 제한은 없으며, 실제 소형근무는 대기기간 중 1회만 가능합니다.</div>
 <div class="warn"><b>접수 마감:</b> <span id="deadline">확인 중</span><div id="remain" style="margin-top:5px"></div></div>
 </div>
@@ -81,8 +81,8 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
   <button id="cancelExit" type="button" class="cancel-exit">닫기</button>
   <p id="cancelMessage" aria-live="polite"></p>
 </div>
-<p><small>3순위 밖 신청 취소는 아래 문의 담당자에게 요청해주세요.</small></p>
-<button id="reload" style="background:#64748b;margin-top:10px">지금 새로고침</button>
+
+
 </div>
 <div class="card" id="bottomInfo">
   <a id="rankLink" class="rank-link" href="https://hktower226-lang.github.io/waiting-order-dashboard/" target="_blank" rel="noopener">📋 본인·전체 대기순번 확인</a>
@@ -115,13 +115,13 @@ function tick(){
 }
 function error(e){
  el('message').textContent=e.message||String(e);
- el('status').textContent='연결 오류 — 관리자에게 문의해주세요.';
+
  el('send').disabled=true;
 }
 function render(result){
  state=result;var n=result.notice;
  el('project').textContent=n.project;
- el('status').textContent=result.accepting?'희망 신청 접수 중':(result.configured?'접수 마감':'공고 미개통');
+
  el('deadline').textContent=fmt(n.deadline);
  el('smallNotice').style.display=n.type==='small'?'block':'none';
  if(n.contact&&n.contact.name){
@@ -270,7 +270,7 @@ function searchNames(){
  });
 }
 el('nameSearch').oninput=searchNames;
-el('reload').onclick=refresh;
+
 function openCancellation(p){
  cancelTarget={name:p.name,branch:p.branch};
  el('cancelTargetName').textContent=p.name+' ('+p.branch+') · 신청 취소';
