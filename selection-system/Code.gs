@@ -31,6 +31,7 @@ function doGet(e) {
   const id = assertId_(supplied);
   const tpl = HtmlService.createTemplateFromFile('Index');
   tpl.noticeId = id;
+  tpl.view = 'apply';
   return tpl.evaluate()
     .setTitle('경기지역본부 이력서 선정')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
