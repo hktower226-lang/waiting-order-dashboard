@@ -136,14 +136,15 @@ function searchNames(){
   if(!items.length){el('pickList').appendChild(para('검색 결과가 없습니다.'));return}
   items.forEach(function(p){
    var b=document.createElement('button');b.type='button';b.className='person-option';
-   b.textContent=p.name+' · '+p.branch+' · 대기 '+p.seq+'번';
-   b.onclick=function(){
+   b.textContent=p.name+' · '+p.branch+' · 대기 '+p.seq+'번'+(p.allowed?'':' · 지원불가: '+p.reason);
+   b.disabled=!p.allowed;
+   if(p.allowed)b.onclick=function(){
     selected=p;el('chosen').textContent='선택: '+b.textContent;el('chosen').style.display='block';
     el('pickList').replaceChildren();el('send').disabled=!(state&&state.accepting)||submitting;
    };
    el('pickList').appendChild(b);
   });
- }).withFailureHandler(function(e){el('pickList').textContent='검색 오류: '+(e.message||String(e))}).searchMembers(q);
+ }).withFailureHandler(function(e){el('pickList').textContent='검색 오류: '+(e.message||String(e))}).searchMembers(q,NOTICE_ID);
 }
 el('nameSearch').oninput=function(){clearTimeout(searchDelay);searchDelay=setTimeout(searchNames,250)};
 el('reload').onclick=refresh;
