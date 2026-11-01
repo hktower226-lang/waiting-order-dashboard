@@ -105,7 +105,7 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <script>
 var NOTICE_ID = <?!= JSON.stringify(noticeId) ?>;
 var VIEW = <?!= JSON.stringify(view) ?>;
-var state=null,submitting=false,selected=null,searchDelay=null;
+var state=null,submitting=false,selected=null,searchIndex=null,searchLoadError='';
 function el(id){return document.getElementById(id)}
 function para(text){var p=document.createElement('p');p.textContent=text;return p}
 function fmt(t){return new Date(t).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false})}
@@ -237,28 +237,51 @@ function refreshAdmin(){
   el('adminStatus').textContent=e.message||String(e);
  }).adminGetApplications(NOTICE_ID,pw);
 }
+function refreshSearchIndex(){
+ google.script.run.withSuccessHandler(function(items){
+  searchIndex=items;
+  searchLoadError='';
+  if(!selected&&el('nameSearch').value.trim())searchNames();
+ }).withFailureHandler(function(e){
+  searchLoadError='명단 연결 오류: '+(e.message||String(e));
+  if(!selected&&el('nameSearch').value.trim())searchNames();
+ }).getSearchIndex(NOTICE_ID);
+}
 function searchNames(){
  var q=el('nameSearch').value.trim().replace(/\s+/g,'');
  el('pickList').replaceChildren();
  selected=null;el('chosen').style.display='none';el('send').disabled=true;
- if(q.length<1){el('pickList').appendChild(para('성명 또는 초성을 입력하세요.'));return}
- google.script.run.withSuccessHandler(function(items){
-  if(el('nameSearch').value.trim().replace(/\s+/g,'')!==q)return;
-  el('pickList').replaceChildren();
-  if(!items.length){el('pickList').appendChild(para('검색 결과가 없습니다.'));return}
-  items.forEach(function(p){
-   var b=document.createElement('button');b.type='button';b.className='person-option';
-   b.textContent=p.name+' · '+p.branch+' · 대기 '+p.seq+'번'+(p.allowed?'':' · 지원불가: '+p.reason);
-   b.disabled=!p.allowed;
-   if(p.allowed)b.onclick=function(){
-    selected=p;el('chosen').textContent='선택: '+b.textContent;el('chosen').style.display='block';
-    el('pickList').replaceChildren();el('send').disabled=!(state&&state.accepting)||submitting;
-   };
-   el('pickList').appendChild(b);
-  });
- }).withFailureHandler(function(e){el('pickList').textContent='검색 오류: '+(e.message||String(e))}).searchMembers(q,NOTICE_ID);
+ if(q.length<1){return;}
+ if(!searchIndex){
+  el('pickList').appendChild(para(searchLoadError||'희망자 명단을 불러오는 중입니다...'));
+  if(searchLoadError){
+   var retry=document.createElement('button');
+   retry.type='button';retry.className='person-option';retry.textContent='명단 다시 불러오기';
+   retry.onclick=function(){searchLoadError='';searchNames();refreshSearchIndex()};
+   el('pickList').appendChild(retry);
+  }
+  return;
+ }
+ var items=searchIndex.filter(function(p){
+  return String(p.name).replace(/\s+/g,'').startsWith(q)||
+    String(p.initials||'').startsWith(q);
+ });
+ if(!items.length){
+  el('pickList').appendChild(para('검색 결과가 없습니다.'));
+  return;
+ }
+ items.forEach(function(p){
+  var b=document.createElement('button');b.type='button';b.className='person-option';
+  b.textContent=p.name+' · '+p.branch+' · 대기 '+p.seq+'번'+(p.allowed?'':' · 지원불가: '+p.reason);
+  b.disabled=!p.allowed;
+  if(p.allowed)b.onclick=function(){
+   selected=p;el('chosen').textContent='선택: '+b.textContent;el('chosen').style.display='block';
+   el('pickList').replaceChildren();el('send').disabled=!(state&&state.accepting)||submitting;
+  };
+  el('pickList').appendChild(b);
+ });
 }
-el('nameSearch').oninput=function(){clearTimeout(searchDelay);searchDelay=setTimeout(searchNames,250)};
+el('nameSearch').oninput=searchNames;
 el('reload').onclick=refresh;
 el('cancelSend').onclick=function(){
  var name=el('cancelName').value.trim();
@@ -284,10 +307,11 @@ el('send').onclick=function(){
  submitting=true;el('send').disabled=true;el('message').textContent='접수 중...';
  google.script.run.withSuccessHandler(function(r){
   submitting=false;el('message').textContent=r.message;selected=null;
-  el('nameSearch').value='';el('chosen').style.display='none';refresh();
+  el('nameSearch').value='';el('chosen').style.display='none';refresh();refreshSearchIndex();
  }).withFailureHandler(function(e){
   submitting=false;el('message').textContent=e.message||String(e);
   el('send').disabled=!(state&&state.accepting)||!selected;
+  refreshSearchIndex();
  }).submitApplicant(NOTICE_ID,selected.key,true);
 };
 el('adminLoad').onclick=refreshAdmin;
@@ -298,7 +322,9 @@ if(VIEW==='admin'){
  document.querySelector('.card').style.display='none';
 }else{
  refresh();
+ refreshSearchIndex();
  setInterval(refresh,15000);
+ setInterval(refreshSearchIndex,60000);
  setInterval(tick,1000);
 }
 </script></body></html>
