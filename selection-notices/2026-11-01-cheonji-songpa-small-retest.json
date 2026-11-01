@@ -1,0 +1,37 @@
+{
+  "id": "2026-11-01-cheonji-songpa-small-retest",
+  "type": "small",
+  "status": "open",
+  "createdAt": "2026-11-01",
+  "deadline": "2026-11-01T13:53:41+09:00",
+  "project": "[테스트 ②·소형] 천지건설산업 송파동 현장",
+  "site": "서울특별시 송파구 송파동 30-7",
+  "contractor": "천지건설산업",
+  "rental": "미정",
+  "contractType": "원청",
+  "subcontractor": "미정",
+  "wage": "월 520만원",
+  "floors": "지하 1층 / 지상 6층",
+  "machine": "소형 타워크레인",
+  "workSchedule": "주 6일 · 주 47시간 (평일 07:00~16:00, 토요일 07:00~15:00)",
+  "plannedInstallation": "미정",
+  "startCondition": "2026년 11월 12일 기사 투입 예정",
+  "duration": "약 5개월",
+  "notes": [
+    "현장 안내 기준 주차 지원 없음",
+    "투입 기사 인적사항 사전 제출 요청",
+    "휴가 등 세부 근로조건은 투입 전 별도 확인 필요",
+    "소형 희망 O만 신청 가능 · 신청 횟수 제한 없음",
+    "소형 실제 근무는 대기기간당 1회만 가능",
+    "이력서 선정 확정 시 선정 취소 전 다른 공고 신청 제한",
+    "실제 채용 공고가 아닌 접수 시스템 테스트입니다"
+  ],
+  "contact": {
+    "name": "박춘성",
+    "role": "본부 사무장",
+    "branch": "본부",
+    "phone": "010-8284-7974"
+  },
+  "signupUrl": "https://script.google.com/macros/s/AKfycbxbimEFQ8tA0a4Q8ZXWCQSnlH4ecxQudJwquSlyj8w_FZ_THsa0FI2KRp0appURqcOJ/exec?id=2026-11-01-cheonji-songpa-small-retest",
+  "notice": "[테스트 ②] 소형 타워크레인 이력서 선정 공고\n\n■ 현장: 천지건설산업 송파동 현장\n■ 주소: 서울특별시 송파구 송파동 30-7\n■ 원청: 천지건설산업 / 임대사 미정\n■ 장비: 소형 타워크레인\n■ 규모: 지하 1층 / 지상 6층\n■ 급여: 월 520만원\n■ 근무시간: 주 6일, 주 47시간 (평일 07:00~16:00 / 토 07:00~15:00)\n■ 근무기간: 약 5개월\n■ 투입 예정: 2026년 11월 12일\n■ 특이사항: 주차 지원 없음, 인적사항 사전 제출 / 휴가 등 세부 조건 별도 확인\n■ 담당: 본부 사무장 박춘성 (010-8284-7974)\n■ 접수 마감: 2026년 11월 1일(일) 13:53:41\n\n▶ 이력서 희망 신청\nhttps://script.google.com/macros/s/AKfycbxbimEFQ8tA0a4Q8ZXWCQSnlH4ecxQudJwquSlyj8w_FZ_THsa0FI2KRp0appURqcOJ/exec?id=2026-11-01-cheonji-songpa-small-retest\n\n* 소형근무 희망 O만 신청 가능하며 이력서 신청 횟수 제한 없음.\n* 소형 실제 근무는 대기기간당 1회만 가능.\n* 이력서 선정이 확정되면 선정 취소 전까지 다른 공고 신청이 제한됩니다.\n* 본 공고는 시스템 작동 확인용 테스트입니다."
+}
