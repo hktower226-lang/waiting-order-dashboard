@@ -86,6 +86,16 @@ function hangulInitials_(text) {
     return n>=0&&n<11172?CHO[Math.floor(n/588)]:c;
   }).join('');
 }
+function sameApplicant_(r,p) {
+  if(String(r[2]||'').trim()!==String(p.name||'').trim() ||
+     normalizeBranch_(r[3])!==normalizeBranch_(p.branch)) return false;
+  // 동명이인 오인 방지: 대기기간 종료일이 양쪽에 있을 때는 일치해야 함.
+  return !(r[7] && p.endDate && String(r[7]).trim()!==String(p.endDate).trim());
+}
+function selectedRecord_(rows,p,excludeRow) {
+  return rows.find((r,i)=>i+2!==excludeRow &&
+    String(r[5]).trim()==='선정' && sameApplicant_(r,p));
+}
 function searchMembers(query, noticeId) {
   const notice=notice_(assertId_(noticeId));
   const q=String(query||'').trim().replace(/\s+/g,'');
@@ -94,9 +104,14 @@ function searchMembers(query, noticeId) {
     const name=String(r.name||'').replace(/\s+/g,'');
     return name.startsWith(q)||hangulInitials_(name).startsWith(q);
   });
+  const selectedRows=sheet_().getDataRange().getValues().slice(1);
   return matches.map(r=>{
     let allowed=true, reason='';
-    try{checkApplicant_(r,notice);}catch(e){allowed=false;reason=e.message||'지원 불가';}
+    try{
+      checkApplicant_(r,notice);
+      if(selectedRecord_(selectedRows,r))
+        throw new Error('다른 공고에서 이력서 선정된 상태입니다. 선정 취소 후 신청할 수 있습니다.');
+    }catch(e){allowed=false;reason=e.message||'지원 불가';}
     return {key:memberKey_(r),name:String(r.name),branch:String(r.branch),
       seq:r.seq,allowed:allowed,reason:reason};
   });
@@ -150,34 +165,38 @@ function checkApplicant_(person,notice) {
   }
 }
 function getState(id) {
-  const n = notice_(id);
-  const rows = sheet_().getDataRange().getValues().slice(1)
-    .filter(r => String(r[1]) === id && String(r[5]) === '접수');
-  const roster = roster_();
-  const used = new Set();
-  const people = [];
-  rows.forEach(r => {
-    const name = String(r[2]).trim(), branch = String(r[3]).trim();
-    const key = branch + '|' + name;
-    if (used.has(key)) return;
+  id=assertId_(id);
+  const n=notice_(id);
+  const rows=sheet_().getDataRange().getValues().slice(1);
+  const active=rows.filter(r=>String(r[1])===id &&
+     ['접수','선정'].includes(String(r[5])));
+  const roster=roster_();
+  const used=new Set(), people=[];
+  active.forEach(r=>{
+    const p={name:String(r[2]).trim(),branch:String(r[3]).trim(),endDate:r[7]||''};
+    // 다른 공고에 이미 선정된 사람은 이 공고의 기존 희망접수 선순위에서 제외.
+    if(String(r[5])==='접수' &&
+       rows.some(x=>String(x[1])!==id && String(x[5])==='선정' && sameApplicant_(x,p)))
+      return;
+    const key=normalizeBranch_(p.branch)+'|'+p.name+'|'+p.endDate;
+    if(used.has(key))return;
     used.add(key);
-    const current = roster.find(x => String(x.name).trim() === name &&
-      normalizeBranch_(x.branch) === normalizeBranch_(branch));
-    const rank = current && Number.isFinite(Number(current.seq)) ?
-      Number(current.seq) : Number(r[4]);
-    people.push({name:name, branch:branch, seq:rank, time:new Date(r[0]).toISOString()});
+    const current=roster.find(x=>sameApplicant_(r,x));
+    const rank=current && Number.isFinite(Number(current.seq))?Number(current.seq):Number(r[4]);
+    people.push({name:p.name,branch:p.branch,seq:rank,
+      status:String(r[5]),time:r[0] instanceof Date?r[0].toISOString():new Date(r[0]).toISOString()});
   });
-  people.sort((a,b) => a.seq-b.seq || a.time.localeCompare(b.time));
-  const now = Date.now(), deadline = new Date(n.deadline).getTime();
-  const isOpen = n.status === 'open' && Number.isFinite(deadline) && now < deadline;
+  people.sort((a,b)=>a.seq-b.seq||a.time.localeCompare(b.time));
+  const now=Date.now(),deadline=new Date(n.deadline).getTime();
+  const isOpen=n.status==='open' && Number.isFinite(deadline) && now<deadline;
   return {
-    notice: {
-      id:n.id, project:n.project, deadline:n.deadline,
-      type:noticeType_(n),contact:resolveContact_(n),
-      rankingUrl:n.signupUrl?(n.signupUrl+(n.signupUrl.indexOf('?')>=0?'&':'?')+'view=ranking'):''
+    notice:{
+      id:n.id,project:n.project,deadline:n.deadline,
+      type:noticeType_(n),contact:resolveContact_(n)
     },
-    accepting: isOpen, configured: n.status === 'open',
-    now: new Date(now).toISOString(), participants:people,
+    accepting:isOpen,configured:n.status==='open',
+    now:new Date(now).toISOString(),
+    participants:people.slice(0,3),
     total:people.length
   };
 }
@@ -195,10 +214,10 @@ function submitApplicant(id, memberKey, consent) {
     checkApplicant_(person,n);
     const sheet=sheet_();
     const rows=sheet.getDataRange().getValues().slice(1);
+    if(selectedRecord_(rows,person))
+      throw new Error('이미 이력서가 선정된 상태입니다. 선정 취소 후 다른 공고에 신청할 수 있습니다.');
     const duplicate=rows.some(r=>String(r[1])===id &&
-      String(r[2]).trim()===String(person.name).trim() &&
-      normalizeBranch_(r[3])===normalizeBranch_(person.branch) &&
-      String(r[5])==='접수');
+      sameApplicant_(r,person) && ['접수','선정'].includes(String(r[5])));
     if(duplicate)throw new Error('이미 접수된 조합원입니다.');
     if(Date.now()>=new Date(n.deadline).getTime())
       throw new Error('접수 마감시간이 지났습니다.');
@@ -222,41 +241,40 @@ function submitApplicant(id, memberKey, consent) {
  * 마감 전까지만 허용. 취소 행은 삭제하지 않고 감사 이력으로 남김.
  * 관리자 반려는 별도의 비밀번호 검사 함수에서만 수행.
  */
-function cancelApplicant(id, cancelCode) {
-  id = assertId_(id);
-  cancelCode = String(cancelCode || '').trim();
-  if (cancelCode.length < 50 || cancelCode.length > 100 ||
-      !/^[0-9a-fA-F-]+$/.test(cancelCode))
-    throw new Error('희망 신청 후 발급받은 취소코드를 정확히 입력해주세요.');
+function cancelApplicant(id,cancelCode) {
+  id=assertId_(id);
+  cancelCode=String(cancelCode||'').trim();
+  if(cancelCode.length<50||cancelCode.length>100||!/^[0-9a-fA-F-]+$/.test(cancelCode))
+    throw new Error('신청 후 발급받은 본인 취소코드를 정확하게 입력해주세요.');
   const lock=LockService.getScriptLock();
-  if(!lock.tryLock(15000))throw new Error('접수가 많습니다. 다시 시도해주세요.');
+  if(!lock.tryLock(15000))throw new Error('요청이 많습니다. 다시 시도해주세요.');
   try {
-    const notice=notice_(id);
+    const sheet=sheet_(), last=sheet.getLastRow();
+    if(last<2)throw new Error('신청 기록을 찾을 수 없습니다.');
+    const rows=sheet.getRange(2,1,last-1,9).getDisplayValues();
+    const hashed=hashCancelCode_(cancelCode),matches=[];
+    rows.forEach((r,i)=>{
+      if(String(r[1]).trim()===id && String(r[8]).trim()===hashed)
+        matches.push({row:i+2,status:String(r[5]).trim()});
+    });
+    if(matches.length!==1)throw new Error('취소코드가 일치하지 않습니다.');
+    const target=matches[0],notice=notice_(id);
     const deadline=new Date(notice.deadline).getTime();
-    if (notice.status!=='open'||!Number.isFinite(deadline)||Date.now()>=deadline)
-      throw new Error('접수 마감 후에는 취소할 수 없습니다.');
-    const sheet=sheet_();
-    const lastRow=sheet.getLastRow();
-    if(lastRow<2)throw new Error('해당 신청 기록을 찾지 못했습니다.');
-    const rows=sheet.getRange(2,1,lastRow-1,9).getDisplayValues();
-    const hash=hashCancelCode_(cancelCode);
-    const matches=[];
-    for(let i=0;i<rows.length;i++){
-      if(String(rows[i][1]).trim()===id && String(rows[i][8]).trim()===hash)
-        matches.push({row:i+2,status:String(rows[i][5]).trim()});
+    if(target.status==='접수'){
+      if(notice.status!=='open'||!Number.isFinite(deadline)||Date.now()>=deadline)
+        throw new Error('일반 희망 신청은 접수 마감 전까지만 취소할 수 있습니다.');
+      sheet.getRange(target.row,6).setValue('취소');
+      sheet.getRange(target.row,10).setValue(new Date());
+    }else if(target.status==='선정'){
+      if(!sheet.getRange('N1').getValue())sheet.getRange('N1').setValue('선정취소시각');
+      sheet.getRange(target.row,6).setValue('선정취소');
+      sheet.getRange(target.row,14).setValue(new Date());
+    }else{
+      throw new Error('이미 취소·반려되었거나 취소할 수 없는 상태입니다.');
     }
-    if(matches.length!==1)throw new Error('취소코드가 일치하는 신청 기록이 없습니다.');
-    if(matches[0].status==='취소')throw new Error('이미 취소된 신청입니다.');
-    if(matches[0].status!=='접수')throw new Error('현재 취소 가능한 신청 상태가 아닙니다.');
-    if(Date.now()>=deadline)throw new Error('접수 마감 후에는 취소할 수 없습니다.');
-    sheet.getRange(matches[0].row,6).setValue('취소');
-    sheet.getRange(matches[0].row,10).setValue(new Date());
-    return {ok:true,message:'희망 신청이 취소되었습니다. 선순위 명단에서도 제외됩니다.'};
-  } finally {
-    lock.releaseLock();
-  }
+    return {ok:true,message:'취소 처리되었습니다. 다른 공고 신청 제한도 해제됩니다.'};
+  }finally{lock.releaseLock();}
 }
-
 
 /**
  * 관리자 반려 비밀번호(12자 이상)를 Apps Script 프로젝트 설정 > 스크립트 속성에
@@ -314,4 +332,36 @@ function adminRejectApplicant(id, sheetRow, password, reason) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function adminSetSelection(id,sheetRow,password,action) {
+  assertAdmin_(password);
+  id=assertId_(id);
+  const row=Number(sheetRow);
+  if(!Number.isInteger(row)||row<2)throw new Error('올바르지 않은 접수번호입니다.');
+  if(action!=='select'&&action!=='release')throw new Error('올바르지 않은 처리 요청입니다.');
+  const lock=LockService.getScriptLock();
+  if(!lock.tryLock(15000))throw new Error('요청이 많습니다. 다시 시도해주세요.');
+  try{
+    const sheet=sheet_(),last=sheet.getLastRow();
+    if(row>last)throw new Error('접수 기록을 찾을 수 없습니다.');
+    const data=sheet.getRange(2,1,last-1,14).getValues();
+    const r=data[row-2];
+    if(String(r[1])!==id)throw new Error('다른 공고의 접수 기록입니다.');
+    if(action==='select'){
+      if(String(r[5])!=='접수')throw new Error('접수 상태인 희망자만 선정할 수 있습니다.');
+      const person={name:r[2],branch:r[3],endDate:r[7]};
+      if(selectedRecord_(data,person,row))
+        throw new Error('이미 다른 공고에서 선정된 조합원입니다. 중복 선정할 수 없습니다.');
+      if(!sheet.getRange('M1').getValue())sheet.getRange('M1').setValue('선정시각');
+      sheet.getRange(row,6).setValue('선정');
+      sheet.getRange(row,13).setValue(new Date());
+      return {ok:true,message:String(r[2])+' 조합원을 이력서 선정 처리했습니다.'};
+    }
+    if(String(r[5])!=='선정')throw new Error('선정 상태인 조합원만 선정 취소할 수 있습니다.');
+    if(!sheet.getRange('N1').getValue())sheet.getRange('N1').setValue('선정취소시각');
+    sheet.getRange(row,6).setValue('선정취소');
+    sheet.getRange(row,14).setValue(new Date());
+    return {ok:true,message:String(r[2])+' 조합원의 선정을 취소했습니다. 신청 제한이 해제됩니다.'};
+  }finally{lock.releaseLock();}
 }
