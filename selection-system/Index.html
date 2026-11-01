@@ -37,14 +37,14 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 .admin-item .select-btn{background:#1e40af}
 .admin-item .release-btn{background:#475569}
 .admin-meta{font-size:13px;color:#526278;margin-bottom:7px}
-.overview{margin:14px 0;padding:14px;border-radius:11px;background:#f8fafc;border:1px solid #dbe4ef}
-.overview h2{font-size:16px;margin:0 0 10px}
-.overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.overview-field{padding:10px;border-radius:8px;background:white;border:1px solid #e4e9f1;min-width:0;overflow-wrap:anywhere}
-.overview-field .overview-label{font-size:12px;color:#64748b;display:block;margin-bottom:4px}
-.overview-field .overview-value{font-size:14px;color:#182a45;font-weight:700;line-height:1.45}
-.overview-notes{margin:11px 0 0;padding-left:20px;color:#43546e;font-size:13px;line-height:1.55}
-@media(max-width:440px){.overview-grid{grid-template-columns:1fr}}
+.rank-name{flex:1;min-width:0;font-size:15px}
+.rank-cancel{width:auto;flex-shrink:0;padding:8px 11px;font-size:13px;background:#475569}
+#cancelPanel{display:none;margin-top:14px;padding:13px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px}
+#cancelPanel button{margin-top:10px}
+#cancelPanel .cancel-exit{background:#64748b}
+#bottomInfo{margin-top:12px}
+#contact{margin-top:10px}
+@media(max-width:440px){.tag{font-size:11px}.row{gap:7px}.rank-cancel{padding:8px;font-size:12px}}
 
 </style>
 </head>
@@ -53,15 +53,7 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <div class="eyebrow">한국타워크레인조종사노동조합 · 경기지역본부</div>
 <h1 id="project">공고를 불러오는 중...</h1>
 <p id="status" class="status">연결 중</p>
-<div id="smallNotice" class="small-notice" style="display:none">📌 <b>소형 이력서 지원 안내</b>
-<div>소형근무 희망자만 신청할 수 있습니다. 이력서 희망 신청은 여러 현장에 가능하며, 소형근무는 대기기간 중 1회만 할 수 있습니다. 소형근무 중에도 대기순번 변동사항에 따라 순번은 상승하되 최대 10번까지만 상승합니다.</div></div>
-<section class="overview" id="overview" style="display:none">
- <h2>현장 및 근무 개요</h2>
- <div class="overview-grid" id="overviewDetails"></div>
- <ul id="overviewNotes" class="overview-notes"></ul>
-</section>
-<div id="contact" style="display:none"></div>
-<a id="rankLink" class="rank-link" href="https://hktower226-lang.github.io/waiting-order-dashboard/" target="_blank" rel="noopener">📋 본인·전체 대기순번 확인</a>
+<div id="smallNotice" class="small-notice" style="display:none">📌 소형근무 희망 O만 신청 가능합니다. 이력서 신청 횟수 제한은 없으며, 실제 소형근무는 대기기간 중 1회만 가능합니다.</div>
 <div class="warn"><b>접수 마감:</b> <span id="deadline">확인 중</span><div id="remain" style="margin-top:5px"></div></div>
 </div>
 <div class="card" id="applyCard">
@@ -74,22 +66,27 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <label style="font-weight:400"><input id="consent" type="checkbox" style="width:auto;margin-right:7px">표시된 대기자 본인이 신청하는 것임을 확인합니다.</label>
 <button id="send" disabled>희망 신청</button>
 <div id="message" aria-live="polite"></div>
-<div class="cancel-panel">
- <h2>희망 신청 취소</h2>
- <p>일반 희망 신청은 마감 전까지 취소할 수 있습니다. 이력서 선정 후에도 성명과 생년월일 6자리로 선정을 취소할 수 있습니다.</p>
- <label for="cancelName">신청자 성명</label>
- <input id="cancelName" type="text" autocomplete="name" placeholder="접수한 이름 입력" maxlength="40">
- <label for="cancelBirth">생년월일 6자리 (YYMMDD)</label>
- <input id="cancelBirth" type="password" inputmode="numeric" autocomplete="off" placeholder="생년월일 6자리" maxlength="6">
- <button id="cancelSend" type="button">희망 신청 취소</button>
- <p id="cancelMessage" aria-live="polite"></p>
-</div>
+
 </div>
 <div class="card" id="rankingCard">
 <h2>희망자 선순위 상위 3명</h2>
 <p><small>총 희망자 <b id="total">0명</b> · 대기순번 기준 1~3위만 공개합니다. 최종 선정은 관리자 확인 후 확정됩니다.</small></p>
 <div id="people" aria-live="polite">불러오는 중...</div>
+<div id="cancelPanel">
+  <b id="cancelTargetName"></b>
+  <p>본인 생년월일 6자리로 취소를 인증합니다.</p>
+  <label for="cancelBirth">생년월일 (YYMMDD)</label>
+  <input id="cancelBirth" type="password" inputmode="numeric" autocomplete="off" placeholder="6자리 입력" maxlength="6">
+  <button id="cancelSend" type="button">취소 확인</button>
+  <button id="cancelExit" type="button" class="cancel-exit">닫기</button>
+  <p id="cancelMessage" aria-live="polite"></p>
+</div>
+<p><small>3순위 밖 신청 취소는 아래 문의 담당자에게 요청해주세요.</small></p>
 <button id="reload" style="background:#64748b;margin-top:10px">지금 새로고침</button>
+</div>
+<div class="card" id="bottomInfo">
+  <a id="rankLink" class="rank-link" href="https://hktower226-lang.github.io/waiting-order-dashboard/" target="_blank" rel="noopener">📋 본인·전체 대기순번 확인</a>
+  <div id="contact" style="display:none"></div>
 </div>
 <div class="card" id="adminCard">
  <div class="eyebrow">경기지역본부 · 관리자 전용</div>
@@ -105,7 +102,7 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <script>
 var NOTICE_ID = <?!= JSON.stringify(noticeId) ?>;
 var VIEW = <?!= JSON.stringify(view) ?>;
-var state=null,submitting=false,selected=null,searchIndex=null,searchLoadError='';
+var state=null,submitting=false,selected=null,searchIndex=null,searchLoadError='',cancelTarget=null,cancelBusy=false;
 function el(id){return document.getElementById(id)}
 function para(text){var p=document.createElement('p');p.textContent=text;return p}
 function fmt(t){return new Date(t).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false})}
@@ -127,27 +124,6 @@ function render(result){
  el('status').textContent=result.accepting?'희망 신청 접수 중':(result.configured?'접수 마감':'공고 미개통');
  el('deadline').textContent=fmt(n.deadline);
  el('smallNotice').style.display=n.type==='small'?'block':'none';
- var details=el('overviewDetails'), notes=el('overviewNotes');
- details.replaceChildren();notes.replaceChildren();
- var fields=[
-   ['현장주소',n.site],['시공사',n.contractor],['임대사',n.rental],
-   ['장비',n.machine],['규모',n.floors],['급여·계약조건',n.wage],
-   ['근무일정',n.workSchedule],['예상 근무기간',n.duration],
-   ['장비 설치 예정',n.plannedInstallation],['기사 투입·출근',n.startCondition]
- ];
- fields.forEach(function(item){
-   if(!item[1]||item[1]==='미정')return;
-   var wrap=document.createElement('div'),label=document.createElement('span'),value=document.createElement('span');
-   wrap.className='overview-field';label.className='overview-label';value.className='overview-value';
-   label.textContent=item[0];value.textContent=item[1];
-   wrap.append(label,value);details.appendChild(wrap);
- });
- (n.notes||[]).forEach(function(note){
-   if(!note)return;
-   var li=document.createElement('li');li.textContent=note;notes.appendChild(li);
- });
- el('overview').style.display=(details.children.length||notes.children.length)?'block':'none';
- notes.style.display=notes.children.length?'block':'none';
  if(n.contact&&n.contact.name){
   var contact=el('contact');
   contact.replaceChildren();
@@ -168,9 +144,21 @@ function render(result){
  result.participants.forEach(function(p,i){
   var row=document.createElement('div'),r=document.createElement('span'),name=document.createElement('b');
   row.className='row';r.className='tag';r.textContent=(i+1)+'순위 · 대기 '+p.seq+'번';
-  name.textContent=p.name+' ('+p.branch+')'+(p.status==='선정'?' · 이력서 선정':'');
-  row.append(r,name);el('people').appendChild(row);
+  name.className='rank-name';
+  name.textContent=p.name+' ('+p.branch+')'+(p.status==='선정'?' · 선정':'');
+  row.append(r,name);
+  if(result.accepting||p.status==='선정'){
+    var cancel=document.createElement('button');
+    cancel.type='button';cancel.className='rank-cancel';cancel.textContent='신청 취소';
+    cancel.setAttribute('aria-label',p.name+' 조합원 신청 취소');
+    cancel.onclick=function(){openCancellation(p)};
+    row.appendChild(cancel);
+  }
+  el('people').appendChild(row);
  });
+ if(cancelTarget&&!result.participants.some(function(p){
+  return p.name===cancelTarget.name&&p.branch===cancelTarget.branch;
+ })){closeCancellation();}
  el('send').disabled=!result.accepting||!selected||submitting;
  tick();
 }
@@ -283,23 +271,40 @@ function searchNames(){
 }
 el('nameSearch').oninput=searchNames;
 el('reload').onclick=refresh;
+function openCancellation(p){
+ cancelTarget={name:p.name,branch:p.branch};
+ el('cancelTargetName').textContent=p.name+' ('+p.branch+') · 신청 취소';
+ el('cancelBirth').value='';
+ el('cancelMessage').textContent='';
+ el('cancelPanel').style.display='block';
+ el('cancelBirth').focus();
+}
+function closeCancellation(){
+ cancelTarget=null;
+ el('cancelPanel').style.display='none';
+ el('cancelBirth').value='';
+ el('cancelMessage').textContent='';
+}
+el('cancelExit').onclick=closeCancellation;
 el('cancelSend').onclick=function(){
- var name=el('cancelName').value.trim();
+ if(!cancelTarget||cancelBusy)return;
  var birth6=el('cancelBirth').value.trim();
- if(!name||!/^[0-9]{6}$/.test(birth6)){
-  el('cancelMessage').textContent='신청자 성명과 생년월일 6자리(YYMMDD)를 입력해주세요.';
+ if(!/^[0-9]{6}$/.test(birth6)){
+  el('cancelMessage').textContent='생년월일 6자리를 입력해주세요.';
   return;
  }
- if(!confirm('이 공고의 희망 신청 또는 이력서 선정을 취소하시겠습니까?'))return;
+ if(!confirm(cancelTarget.name+' 조합원의 희망 신청을 취소하시겠습니까?'))return;
+ var name=cancelTarget.name;
+ cancelBusy=true;
  var btn=el('cancelSend');btn.disabled=true;el('cancelMessage').textContent='취소 처리 중...';
  google.script.run.withSuccessHandler(function(r){
-  btn.disabled=false;el('cancelMessage').textContent=r.message;
-  el('cancelName').value='';
-  el('cancelBirth').value='';
-  refresh();
-  refreshSearchIndex();
+  cancelBusy=false;btn.disabled=false;
+  closeCancellation();el('message').textContent=r.message;
+  refresh();refreshSearchIndex();
  }).withFailureHandler(function(e){
-  btn.disabled=false;el('cancelMessage').textContent=e.message||String(e);
+  cancelBusy=false;btn.disabled=false;
+  el('cancelMessage').textContent=e.message||String(e);
+  el('cancelBirth').value='';
  }).cancelApplicant(NOTICE_ID,name,birth6);
 };
 el('send').onclick=function(){
@@ -321,6 +326,7 @@ if(VIEW==='admin'){
  el('applyCard').style.display='none';
  el('rankingCard').style.display='none';
  document.querySelector('.card').style.display='none';
+ el('bottomInfo').style.display='none';
 }else{
  refresh();
  refreshSearchIndex();
