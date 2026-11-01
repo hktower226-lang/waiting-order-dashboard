@@ -100,6 +100,38 @@ function searchMembers(query, noticeId) {
       seq:r.seq,allowed:allowed,reason:reason};
   });
 }
+function hashCancelCode_(code) {
+  const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,
+    String(code || ''), Utilities.Charset.UTF_8);
+  return digest.map(b => ('0' + (b & 255).toString(16)).slice(-2)).join('');
+}
+function resolveContact_(n) {
+  const contact = n.contact || null;
+  if (!contact) return null;
+  if (contact.phone) return contact;
+  const requested = String(contact.role || contact.name || '').replace(/\s+/g, '');
+  let targetRole = '';
+  if (/남부지부장|남부지부/.test(requested)) targetRole = '남부지부장';
+  else if (/본부사무장|사무장/.test(requested)) targetRole = '사무장';
+  if (!targetRole) return contact;
+  try {
+    const cache = CacheService.getScriptCache();
+    let txt = cache.get('union-contact-data-v1');
+    if (!txt) {
+      const url = 'https://raw.githubusercontent.com/hktower226-lang/gyeonggi-info-dashboard/main/data.json';
+      const res = UrlFetchApp.fetch(url, {muteHttpExceptions:true});
+      if (res.getResponseCode()!==200) return contact;
+      txt = res.getContentText('UTF-8');
+      cache.put('union-contact-data-v1', txt, 600);
+    }
+    const matches = (JSON.parse(txt).contacts || []).filter(x => x.role===targetRole);
+    if (matches.length===1) {
+      return {branch:targetRole==='남부지부장'?'남부지부':'본부',
+        role:matches[0].role, name:matches[0].name, phone:matches[0].phone};
+    }
+  } catch (e) {}
+  return contact;
+}
 function smallNoteFlags_(person) {
   // 비고에서 명확히 표시된 내용만 활용한다. 날짜/문맥이 불명확하면 판단하지 않는다.
   const note=String(person.note||'').replace(/\s+/g,'');
@@ -123,7 +155,8 @@ function alreadyAppliedForSmall_(sheet,person) {
   const rows=sheet.getDataRange().getValues().slice(1);
   const currentKey=memberKey_(person);
   for(const r of rows){
-    if(String(r[5])!=='접수')continue;
+    // 소형 이력서 신청 1회 제한: 취소한 접수도 해당 대기기간의 지원 이력으로 유지.
+    if(String(r[5])!=='접수' && String(r[5])!=='취소')continue;
     if(String(r[2]).trim()!==String(person.name).trim() ||
        normalizeBranch_(r[3])!==normalizeBranch_(person.branch))continue;
     if(r[7]&&String(r[7]).trim()!==String(person.endDate||'').trim())continue;
@@ -159,7 +192,7 @@ function getState(id) {
   return {
     notice: {
       id:n.id, project:n.project, deadline:n.deadline,
-      type:noticeType_(n),contact:n.contact||null,
+      type:noticeType_(n),contact:resolveContact_(n),
       rankingUrl:n.signupUrl?(n.signupUrl+(n.signupUrl.indexOf('?')>=0?'&':'?')+'view=ranking'):''
     },
     accepting: isOpen, configured: n.status === 'open',
@@ -193,10 +226,53 @@ function submitApplicant(id, memberKey, consent) {
     // 기존 시트의 A~F열을 유지하고, 소형 지원 이력용 G/H열을 사용.
     if(!sheet.getRange('G1').getValue())sheet.getRange('G1').setValue('모집유형');
     if(!sheet.getRange('H1').getValue())sheet.getRange('H1').setValue('대기회차 종료일');
+    if(!sheet.getRange('I1').getValue())sheet.getRange('I1').setValue('취소코드 해시');
+    if(!sheet.getRange('J1').getValue())sheet.getRange('J1').setValue('취소시각');
+    const cancelCode = Utilities.getUuid() + '-' + Utilities.getUuid();
     sheet.appendRow([new Date(),id,String(person.name).trim(),
       normalizeBranch_(person.branch),Number(person.seq),'접수',
-      noticeType_(n),String(person.endDate||'')]);
-    return {ok:true,message:'희망 신청이 접수되었습니다.'};
+      noticeType_(n),String(person.endDate||''),hashCancelCode_(cancelCode),'']);
+    return {ok:true,message:'희망 신청이 접수되었습니다.',cancelCode:cancelCode};
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 본인 접수 취소: 신청자에게만 발급된 비밀 취소코드를 대조.
+ * 마감 전까지만 허용. 취소 행은 삭제하지 않고 감사 이력으로 남김.
+ * 관리자 반려 기능은 만들지 않음.
+ */
+function cancelApplicant(id, cancelCode) {
+  id = assertId_(id);
+  cancelCode = String(cancelCode || '').trim();
+  if (cancelCode.length < 50 || cancelCode.length > 100 ||
+      !/^[0-9a-fA-F-]+$/.test(cancelCode))
+    throw new Error('희망 신청 후 발급받은 취소코드를 정확히 입력해주세요.');
+  const lock=LockService.getScriptLock();
+  if(!lock.tryLock(15000))throw new Error('접수가 많습니다. 다시 시도해주세요.');
+  try {
+    const notice=notice_(id);
+    const deadline=new Date(notice.deadline).getTime();
+    if (notice.status!=='open'||!Number.isFinite(deadline)||Date.now()>=deadline)
+      throw new Error('접수 마감 후에는 취소할 수 없습니다.');
+    const sheet=sheet_();
+    const lastRow=sheet.getLastRow();
+    if(lastRow<2)throw new Error('해당 신청 기록을 찾지 못했습니다.');
+    const rows=sheet.getRange(2,1,lastRow-1,9).getDisplayValues();
+    const hash=hashCancelCode_(cancelCode);
+    const matches=[];
+    for(let i=0;i<rows.length;i++){
+      if(String(rows[i][1]).trim()===id && String(rows[i][8]).trim()===hash)
+        matches.push({row:i+2,status:String(rows[i][5]).trim()});
+    }
+    if(matches.length!==1)throw new Error('취소코드가 일치하는 신청 기록이 없습니다.');
+    if(matches[0].status==='취소')throw new Error('이미 취소된 신청입니다.');
+    if(matches[0].status!=='접수')throw new Error('현재 취소 가능한 신청 상태가 아닙니다.');
+    if(Date.now()>=deadline)throw new Error('접수 마감 후에는 취소할 수 없습니다.');
+    sheet.getRange(matches[0].row,6).setValue('취소');
+    sheet.getRange(matches[0].row,10).setValue(new Date());
+    return {ok:true,message:'희망 신청이 취소되었습니다. 선순위 명단에서도 제외됩니다.'};
   } finally {
     lock.releaseLock();
   }
