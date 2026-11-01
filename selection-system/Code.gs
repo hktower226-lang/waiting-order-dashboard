@@ -6,6 +6,7 @@
  */
 const REPO_RAW = 'https://raw.githubusercontent.com/hktower226-lang/waiting-order-dashboard/main/';
 const SHEET_PROP = 'SELECTION_SHEET_ID';
+const AUTH_PROP = 'AUTH_SHEET_ID'; // 비공개 인증명단 스프레드시트 ID, 스크립트 속성에서 설정
 const DEFAULT_NOTICE = '2026-10-29-umi36bl';
 
 function setup() {
@@ -121,6 +122,49 @@ function hashCancelCode_(code) {
     String(code || ''), Utilities.Charset.UTF_8);
   return digest.map(b => ('0' + (b & 255).toString(16)).slice(-2)).join('');
 }
+
+/**
+ * 비공개 인증명단: A 성명 / B 소속지부 / C 생년월일.
+ * 생년월일은 공개 GitHub·신청 응답·접수 저장 시트에 기록하지 않음.
+ */
+function birth6_(value) {
+  const digits=String(value==null?'':value).replace(/\D/g,'');
+  if(digits.length===8)return digits.slice(2);
+  if(digits.length===6)return digits;
+  return '';
+}
+function authenticationSheet_() {
+  const id=PropertiesService.getScriptProperties().getProperty(AUTH_PROP);
+  if(!id)throw new Error('관리자가 비공개 조합원 인증명단을 아직 연결하지 않았습니다.');
+  const sheet=SpreadsheetApp.openById(id).getSheetByName('인증명단');
+  if(!sheet)throw new Error('비공개 인증명단의 시트 이름을 확인해주세요.');
+  const headers=sheet.getRange(1,1,1,3).getDisplayValues()[0];
+  if(headers[0]!=='성명'||headers[1]!=='소속지부'||headers[2]!=='생년월일')
+    throw new Error('비공개 인증명단 A~C열 제목이 일치하지 않습니다.');
+  return sheet;
+}
+function birthMatches_(authRows,name,branch,birth6) {
+  const matching=authRows.filter(r=>String(r[0]||'').trim()===name &&
+    normalizeBranch_(r[1])===normalizeBranch_(branch));
+  const births=[...new Set(matching.map(r=>birth6_(r[2])).filter(Boolean))];
+  // 같은 성명·지부에 서로 다른 생년월일이 있으면 안전을 위해 직접 취소 보류.
+  return births.length===1&&births[0]===birth6;
+}
+function cancelAttemptKey_(id,name) {
+  const salt=PropertiesService.getScriptProperties().getProperty('AUTH_SALT')||'selection-cancel-rate-v1';
+  const digest=Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,
+    salt+'|'+id+'|'+name,Utilities.Charset.UTF_8);
+  return 'cancelfail:'+Utilities.base64EncodeWebSafe(digest).slice(0,40);
+}
+function cancelAttemptAllowed_(key) {
+  if(Number(CacheService.getScriptCache().get(key)||0)>=5)
+    throw new Error('인증 시도 횟수를 초과했습니다. 30분 후 다시 시도하거나 담당자에게 문의해주세요.');
+}
+function cancelAttemptFailed_(key) {
+  const cache=CacheService.getScriptCache();
+  cache.put(key,String(Number(cache.get(key)||0)+1),1800);
+}
+
 function resolveContact_(n) {
   const contact = n.contact || null;
   if (!contact) return null;
@@ -224,55 +268,66 @@ function submitApplicant(id, memberKey, consent) {
     // 기존 시트 A~F열 유지. G/H열은 모집유형/대기회차 기록용이며 신청 횟수 제한에 사용하지 않는다.
     if(!sheet.getRange('G1').getValue())sheet.getRange('G1').setValue('모집유형');
     if(!sheet.getRange('H1').getValue())sheet.getRange('H1').setValue('대기회차 종료일');
-    if(!sheet.getRange('I1').getValue())sheet.getRange('I1').setValue('취소코드 해시');
-    if(!sheet.getRange('J1').getValue())sheet.getRange('J1').setValue('취소시각');
-    const cancelCode = Utilities.getUuid() + '-' + Utilities.getUuid();
+    // 취소용 생년월일은 기록하지 않는다. 과거 I열의 취소코드 해시는 보존만 함.
     sheet.appendRow([new Date(),id,String(person.name).trim(),
       normalizeBranch_(person.branch),Number(person.seq),'접수',
-      noticeType_(n),String(person.endDate||''),hashCancelCode_(cancelCode),'']);
-    return {ok:true,message:'희망 신청이 접수되었습니다.',cancelCode:cancelCode};
+      noticeType_(n),String(person.endDate||'')]);
+    return {ok:true,message:'희망 신청이 접수되었습니다.'};
   } finally {
     lock.releaseLock();
   }
 }
 
 /**
- * 본인 접수 취소: 신청자에게만 발급된 비밀 취소코드를 대조.
- * 마감 전까지만 허용. 취소 행은 삭제하지 않고 감사 이력으로 남김.
- * 관리자 반려는 별도의 비밀번호 검사 함수에서만 수행.
+ * 본인 신청 취소: 성명과 생년월일(YYMMDD)을 비공개 명단에 서버에서 대조.
+ * 일반 신청 취소는 접수 마감 전, 이력서 선정 취소는 마감 후에도 가능.
+ * 개인정보를 공개 저장소, 접수 시트 및 브라우저 저장소에 기록하지 않는다.
  */
-function cancelApplicant(id,cancelCode) {
+function cancelApplicant(id, name, birth6) {
   id=assertId_(id);
-  cancelCode=String(cancelCode||'').trim();
-  if(cancelCode.length<50||cancelCode.length>100||!/^[0-9a-fA-F-]+$/.test(cancelCode))
-    throw new Error('신청 후 발급받은 본인 취소코드를 정확하게 입력해주세요.');
+  name=String(name||'').trim().replace(/\s+/g,'');
+  birth6=String(birth6||'').trim();
+  if(name.length<2||name.length>40||!/^[0-9]{6}$/.test(birth6))
+    throw new Error('신청자 성명과 생년월일 6자리(YYMMDD)를 정확히 입력해주세요.');
+  const key=cancelAttemptKey_(id,name);
+  cancelAttemptAllowed_(key);
   const lock=LockService.getScriptLock();
   if(!lock.tryLock(15000))throw new Error('요청이 많습니다. 다시 시도해주세요.');
   try {
     const sheet=sheet_(), last=sheet.getLastRow();
-    if(last<2)throw new Error('신청 기록을 찾을 수 없습니다.');
-    const rows=sheet.getRange(2,1,last-1,9).getDisplayValues();
-    const hashed=hashCancelCode_(cancelCode),matches=[];
+    if(last<2)throw new Error('인증정보 또는 취소 가능한 신청 기록이 일치하지 않습니다.');
+    const rows=sheet.getRange(2,1,last-1,8).getValues();
+    const candidates=[];
     rows.forEach((r,i)=>{
-      if(String(r[1]).trim()===id && String(r[8]).trim()===hashed)
-        matches.push({row:i+2,status:String(r[5]).trim()});
+      if(String(r[1])===id && String(r[2]||'').trim()===name &&
+         ['접수','선정'].includes(String(r[5])))
+        candidates.push({row:i+2,branch:String(r[3]||''),status:String(r[5])});
     });
-    if(matches.length!==1)throw new Error('취소코드가 일치하지 않습니다.');
-    const target=matches[0],notice=notice_(id);
+    const authSheet=authenticationSheet_();
+    const authLast=authSheet.getLastRow();
+    const authRows=authLast>=2
+      ?authSheet.getRange(2,1,authLast-1,3).getDisplayValues():[];
+    const verified=candidates.filter(c=>birthMatches_(authRows,name,c.branch,birth6));
+    if(verified.length!==1){
+      cancelAttemptFailed_(key);
+      throw new Error('인증정보 또는 취소 가능한 신청 기록이 일치하지 않습니다. 동명이인은 담당자에게 문의해주세요.');
+    }
+    const target=verified[0],notice=notice_(id);
     const deadline=new Date(notice.deadline).getTime();
+    // 일반 취소는 마감 전까지. 선정이 확정된 경우 마감 후에도 취소할 수 있음.
     if(target.status==='접수'){
       if(notice.status!=='open'||!Number.isFinite(deadline)||Date.now()>=deadline)
         throw new Error('일반 희망 신청은 접수 마감 전까지만 취소할 수 있습니다.');
+      if(!sheet.getRange('J1').getValue())sheet.getRange('J1').setValue('취소시각');
       sheet.getRange(target.row,6).setValue('취소');
       sheet.getRange(target.row,10).setValue(new Date());
-    }else if(target.status==='선정'){
+    }else{
       if(!sheet.getRange('N1').getValue())sheet.getRange('N1').setValue('선정취소시각');
       sheet.getRange(target.row,6).setValue('선정취소');
       sheet.getRange(target.row,14).setValue(new Date());
-    }else{
-      throw new Error('이미 취소·반려되었거나 취소할 수 없는 상태입니다.');
     }
-    return {ok:true,message:'취소 처리되었습니다. 다른 공고 신청 제한도 해제됩니다.'};
+    CacheService.getScriptCache().remove(key);
+    return {ok:true,message:'취소 처리되었습니다. 선순위 및 다른 공고 신청 제한에 반영됩니다.'};
   }finally{lock.releaseLock();}
 }
 
