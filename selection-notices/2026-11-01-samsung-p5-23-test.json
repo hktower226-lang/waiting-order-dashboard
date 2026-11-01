@@ -1,1 +1,29 @@
-{"id":"2026-11-01-samsung-p5-23-test","type":"large","status":"open","createdAt":"2026-11-01","deadline":"2026-11-01T18:00:00+09:00","project":"[테스트] 삼성E&A 평택 P5 복합동 23호기","rental":"신우개발","wage":"임단협","machine":"POTAIN MR608 (32톤 L형), 지브 50m","duration":"8~10개월 예상","startCondition":"11월 9일 건강검진 통과 후 예정","notes":["11월 5일 신우교육 예정","11월 9일 현장교육 예정","60세 미만","32톤 대형장비 유경험 필수","PC·철골 경험 필수","주 52시간 초과 불가","Q-NET 취득확인서 및 전 현장 경력증명서 필요"],"contact":{"name":"남성우","role":"부본부장","phone":"010-6320-5122"},"notice":"[테스트] 삼성E&A 평택 P5 복합동 23호기\n신우개발 / 임단협 / POTAIN MR608 32톤 L형 / 지브 50m\n8~10개월 예상 / 11월 9일 출근 예정\n신우교육 11/5, 현장교육 11/9\n60세 미만 · 32톤 대형, PC, 철골 경험 필수\n주 52시간 초과 불가 / Q-NET 확인서 및 전 현장 경력증명서 필요\n마감: 11월 1일 18:00"}
+{
+  "id": "2026-11-01-samsung-p5-23-test",
+  "type": "large",
+  "status": "open",
+  "createdAt": "2026-11-01",
+  "deadline": "2026-11-01T18:00:00+09:00",
+  "project": "[테스트] 삼성E&A 평택 P5 복합동 23호기",
+  "rental": "신우개발",
+  "wage": "임단협",
+  "machine": "POTAIN MR608 (32톤 L형), 지브 50m",
+  "duration": "8~10개월 예상",
+  "startCondition": "11월 9일 건강검진 통과 후 예정",
+  "notes": [
+    "11월 5일 신우교육 예정",
+    "11월 9일 현장교육 예정",
+    "60세 미만",
+    "32톤 대형장비 유경험 필수",
+    "PC·철골 경험 필수",
+    "주 52시간 초과 불가",
+    "Q-NET 취득확인서 및 전 현장 경력증명서 필요"
+  ],
+  "contact": {
+    "name": "남성우",
+    "role": "부본부장",
+    "phone": "010-6320-5122"
+  },
+  "notice": "📢 이력서 선정합니다 [삼성E&A] 평택 P5 복합동 23호기\n■ 임대사: 신우개발 / 급여: 임단협\n■ 장비: POTAIN MR608 (32톤 L형) / 지브 50m\n■ 사용기간: 약 8~10개월\n■ 출근: 11/9 예정(건강검진 통과 시)\n■ 신우교육: 11/5 / 현장교육: 11/9 예정\n■ 필수: 60세 미만, 32톤 대형·PC·철골 경험자\n■ 주 52시간 초과근무 불가\n■ 제출: Q-NET 취득확인서, 전 현장 경력증명서\n※ 현장 상황에 따라 투입 일정 변경 가능\n⏰ 마감: 11/1(일) 18:00\n👇 희망 신청\nhttps://script.google.com/macros/s/AKfycbxbimEFQ8tA0a4Q8ZXWCQSnlH4ecxQudJwquSlyj8w_FZ_THsa0FI2KRp0appURqcOJ/exec?id=2026-11-01-samsung-p5-23-test",
+  "signupUrl": "https://script.google.com/macros/s/AKfycbxbimEFQ8tA0a4Q8ZXWCQSnlH4ecxQudJwquSlyj8w_FZ_THsa0FI2KRp0appURqcOJ/exec?id=2026-11-01-samsung-p5-23-test"
+}
