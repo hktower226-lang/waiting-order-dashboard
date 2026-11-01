@@ -37,6 +37,14 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 .admin-item .select-btn{background:#1e40af}
 .admin-item .release-btn{background:#475569}
 .admin-meta{font-size:13px;color:#526278;margin-bottom:7px}
+.overview{margin:14px 0;padding:14px;border-radius:11px;background:#f8fafc;border:1px solid #dbe4ef}
+.overview h2{font-size:16px;margin:0 0 10px}
+.overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.overview-field{padding:10px;border-radius:8px;background:white;border:1px solid #e4e9f1;min-width:0;overflow-wrap:anywhere}
+.overview-field .overview-label{font-size:12px;color:#64748b;display:block;margin-bottom:4px}
+.overview-field .overview-value{font-size:14px;color:#182a45;font-weight:700;line-height:1.45}
+.overview-notes{margin:11px 0 0;padding-left:20px;color:#43546e;font-size:13px;line-height:1.55}
+@media(max-width:440px){.overview-grid{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -47,6 +55,11 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <p id="status" class="status">연결 중</p>
 <div id="smallNotice" class="small-notice" style="display:none">📌 <b>소형 이력서 지원 안내</b>
 <div>소형근무 희망자만 신청할 수 있습니다. 이력서 희망 신청은 여러 현장에 가능하며, 소형근무는 대기기간 중 1회만 할 수 있습니다. 소형근무 중에도 대기순번 변동사항에 따라 순번은 상승하되 최대 10번까지만 상승합니다.</div></div>
+<section class="overview" id="overview" style="display:none">
+ <h2>현장 및 근무 개요</h2>
+ <div class="overview-grid" id="overviewDetails"></div>
+ <ul id="overviewNotes" class="overview-notes"></ul>
+</section>
 <div id="contact" style="display:none"></div>
 <a id="rankLink" class="rank-link" href="https://hktower226-lang.github.io/waiting-order-dashboard/" target="_blank" rel="noopener">📋 본인·전체 대기순번 확인</a>
 <div class="warn"><b>접수 마감:</b> <span id="deadline">확인 중</span><div id="remain" style="margin-top:5px"></div></div>
@@ -114,6 +127,27 @@ function render(result){
  el('status').textContent=result.accepting?'희망 신청 접수 중':(result.configured?'접수 마감':'공고 미개통');
  el('deadline').textContent=fmt(n.deadline);
  el('smallNotice').style.display=n.type==='small'?'block':'none';
+ var details=el('overviewDetails'), notes=el('overviewNotes');
+ details.replaceChildren();notes.replaceChildren();
+ var fields=[
+   ['현장주소',n.site],['시공사',n.contractor],['임대사',n.rental],
+   ['장비',n.machine],['규모',n.floors],['급여·계약조건',n.wage],
+   ['근무일정',n.workSchedule],['예상 근무기간',n.duration],
+   ['장비 설치 예정',n.plannedInstallation],['기사 투입·출근',n.startCondition]
+ ];
+ fields.forEach(function(item){
+   if(!item[1]||item[1]==='미정')return;
+   var wrap=document.createElement('div'),label=document.createElement('span'),value=document.createElement('span');
+   wrap.className='overview-field';label.className='overview-label';value.className='overview-value';
+   label.textContent=item[0];value.textContent=item[1];
+   wrap.append(label,value);details.appendChild(wrap);
+ });
+ (n.notes||[]).forEach(function(note){
+   if(!note)return;
+   var li=document.createElement('li');li.textContent=note;notes.appendChild(li);
+ });
+ el('overview').style.display=(details.children.length||notes.children.length)?'block':'none';
+ notes.style.display=notes.children.length?'block':'none';
  if(n.contact&&n.contact.name){
   var contact=el('contact');
   contact.replaceChildren();
