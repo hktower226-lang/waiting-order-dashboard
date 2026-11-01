@@ -36,7 +36,7 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <div id="smallNotice" class="small-notice" style="display:none">📌 <b>소형 이력서 지원 안내</b>
 <div>소형근무 희망자에 한해 선정하며, 대기기간 중 1회만 지원할 수 있습니다. 소형근무 중에도 대기순번 변동사항에 따라 순번은 상승하되 최대 10번까지만 상승합니다.</div></div>
 <div id="contact" style="display:none"></div>
-<a id="rankLink" class="rank-link" target="_blank" rel="noopener" style="display:none">📋 희망자 선순위 바로보기</a>
+<a id="rankLink" class="rank-link" href="https://hktower226-lang.github.io/waiting-order-dashboard/" target="_blank" rel="noopener">📋 본인·전체 대기순번 확인</a>
 <div class="warn"><b>접수 마감:</b> <span id="deadline">확인 중</span><div id="remain" style="margin-top:5px"></div></div>
 </div>
 <div class="card" id="applyCard">
@@ -56,12 +56,10 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <p><small>접수자만 대기순번 오름차순으로 표시합니다. 최종 선정은 관리자 확인 후 확정됩니다.</small></p>
 <div id="people" aria-live="polite">불러오는 중...</div>
 <button id="reload" style="background:#64748b;margin-top:10px">지금 새로고침</button>
-<a id="backLink" class="rank-link">← 이력서 신청 화면으로</a>
 </div>
 </main>
 <script>
 var NOTICE_ID = <?!= JSON.stringify(noticeId) ?>;
-var VIEW = <?!= JSON.stringify(view) ?>;
 var state=null,submitting=false,selected=null,searchDelay=null;
 function el(id){return document.getElementById(id)}
 function para(text){var p=document.createElement('p');p.textContent=text;return p}
@@ -89,7 +87,6 @@ function render(result){
   el('contact').textContent='문의 담당: '+(n.contact.branch||'')+' '+(n.contact.role||'')+' '+n.contact.name+
    (n.contact.phone?' / '+n.contact.phone:'');
  }else{el('contact').style.display='none'}
- if(n.rankingUrl){el('rankLink').href=n.rankingUrl;el('rankLink').style.display='block'}
  el('total').textContent=result.total+'명';
  el('people').replaceChildren();
  if(!result.participants.length)el('people').appendChild(para('현재 등록된 희망자가 없습니다.'));
@@ -99,13 +96,6 @@ function render(result){
   name.textContent=p.name+' ('+p.branch+')';row.append(r,name);el('people').appendChild(row);
  });
  el('send').disabled=!result.accepting||!selected||submitting;
- if(VIEW==='ranking'){
-  el('applyCard').style.display='none';
-  el('rankLink').style.display='none';
-  el('rankingCard').style.display='block';
- } else {
-  el('rankingCard').style.display='none';
- }
  tick();
 }
 function refresh(){google.script.run.withSuccessHandler(render).withFailureHandler(error).getState(NOTICE_ID)}
@@ -132,7 +122,6 @@ function searchNames(){
 }
 el('nameSearch').oninput=function(){clearTimeout(searchDelay);searchDelay=setTimeout(searchNames,250)};
 el('reload').onclick=refresh;
-el('backLink').href=window.location.href.replace(/&view=ranking|\?view=ranking&?/,'');
 el('send').onclick=function(){
  if(!state||!state.accepting||!selected||submitting)return;
  if(!el('consent').checked){el('message').textContent='본인 신청 확인을 체크해주세요.';return}
