@@ -158,18 +158,12 @@ function getState(id) {
   const isOpen = n.status === 'open' && Number.isFinite(deadline) && now < deadline;
   return {
     notice: {
-      id:n.id, project:n.project, site:n.site, rental:n.rental,
-      wage:n.wage, floors:n.floors, machine:n.machine,
-      plannedInstallation:n.plannedInstallation, startCondition:n.startCondition,
-      duration:n.duration, notes:n.notes || [], deadline:n.deadline,
+      id:n.id, project:n.project, deadline:n.deadline,
       type:noticeType_(n),contact:n.contact||null,
       rankingUrl:n.signupUrl?(n.signupUrl+(n.signupUrl.indexOf('?')>=0?'&':'?')+'view=ranking'):''
     },
     accepting: isOpen, configured: n.status === 'open',
     now: new Date(now).toISOString(), participants:people,
-    waitingRanks:roster.map(r=>({seq:r.seq,name:r.name,branch:r.branch}))
-      .filter(r=>Number.isFinite(Number(r.seq)))
-      .sort((a,b)=>Number(a.seq)-Number(b.seq)),
     total:people.length
   };
 }
