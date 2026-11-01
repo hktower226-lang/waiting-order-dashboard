@@ -26,6 +26,13 @@ small{color:#68778c}.status{padding:10px;background:#eef5fe;border-radius:8px;ma
 .row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e7ecf2;align-items:center}
 .tag{font-size:12px;background:#e9f0ff;color:#134c9b;padding:6px 8px;border-radius:7px;font-weight:700;white-space:nowrap}
 main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
+.phone-link{display:inline-block;padding:8px 12px;border-radius:8px;color:#144aa0;background:#e7f1ff;font-weight:700;text-decoration:none}
+.cancel-panel{border:1px solid #d5e1ed;border-radius:10px;padding:13px;margin-top:16px;background:#f8fafc}
+.cancel-panel button{background:#475569;margin-top:10px}
+#cancelTicket{border:1px solid #b8dbbf;background:#effbf0;border-radius:9px;padding:12px;margin-top:12px}
+.cancel-code{display:block;overflow-wrap:anywhere;padding:9px;margin:9px 0;background:white;border:1px solid #d2e4d4;border-radius:8px;font-size:12px}
+#copyCode{background:#64748b}
+
 </style>
 </head>
 <body><main class="wrap">
@@ -49,6 +56,20 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <label style="font-weight:400"><input id="consent" type="checkbox" style="width:auto;margin-right:7px">표시된 대기자 본인이 신청하는 것임을 확인합니다.</label>
 <button id="send" disabled>희망 신청</button>
 <div id="message" aria-live="polite"></div>
+<div id="cancelTicket" style="display:none">
+ <b>신청 완료 · 취소코드 보관</b>
+ <p>접수 취소 시 필요한 본인 전용 코드입니다. 다른 사람에게 공유하지 마세요.</p>
+ <span id="ticketText" class="cancel-code"></span>
+ <button id="copyCode" type="button">취소코드 복사</button>
+</div>
+<div class="cancel-panel">
+ <h2>희망 신청 취소</h2>
+ <p>신청하신 본인만 접수 마감 전까지 취소할 수 있습니다.</p>
+ <label for="cancelCode">본인 취소코드</label>
+ <input id="cancelCode" type="text" autocomplete="off" placeholder="신청 후 받은 취소코드 입력">
+ <button id="cancelSend" type="button">희망 신청 취소</button>
+ <p id="cancelMessage" aria-live="polite"></p>
+</div>
 </div>
 <div class="card" id="rankingCard">
 <h2>희망자 선순위 · <span id="total">0명</span></h2>
@@ -82,9 +103,18 @@ function render(result){
  el('deadline').textContent=fmt(n.deadline);
  el('smallNotice').style.display=n.type==='small'?'block':'none';
  if(n.contact&&n.contact.name){
-  el('contact').style.display='block';
-  el('contact').textContent='문의 담당: '+(n.contact.branch||'')+' '+(n.contact.role||'')+' '+n.contact.name+
-   (n.contact.phone?' / '+n.contact.phone:'');
+  var contact=el('contact');
+  contact.replaceChildren();
+  contact.style.display='block';
+  contact.appendChild(para('문의 담당: '+(n.contact.role||'')+' '+n.contact.name));
+  var num=String(n.contact.phone||'').replace(/[^0-9+]/g,'');
+  if(num){
+   var call=document.createElement('a');
+   call.className='phone-link';
+   call.href='tel:'+num;
+   call.textContent='📞 '+n.contact.phone+' · 전화 연결';
+   contact.appendChild(call);
+  }
  }else{el('contact').style.display='none'}
  el('total').textContent=result.total+'명';
  el('people').replaceChildren();
@@ -121,12 +151,45 @@ function searchNames(){
 }
 el('nameSearch').oninput=function(){clearTimeout(searchDelay);searchDelay=setTimeout(searchNames,250)};
 el('reload').onclick=refresh;
+var cancelStorageKey='waiting-select-cancel:'+NOTICE_ID;
+var lastCancelCode='';
+try { lastCancelCode=localStorage.getItem(cancelStorageKey)||''; }catch(e){}
+if(lastCancelCode)el('cancelCode').value=lastCancelCode;
+el('copyCode').onclick=function(){
+ var code=el('ticketText').textContent;
+ if(!code)return;
+ if(navigator.clipboard&&navigator.clipboard.writeText){
+  navigator.clipboard.writeText(code).then(function(){el('message').textContent='취소코드가 복사되었습니다.';},
+    function(){el('message').textContent='취소코드를 길게 눌러 복사해주세요.';});
+ }else{el('message').textContent='취소코드를 길게 눌러 복사해주세요.';}
+};
+el('cancelSend').onclick=function(){
+ var code=el('cancelCode').value.trim();
+ if(!code){el('cancelMessage').textContent='본인 취소코드를 입력해주세요.';return;}
+ if(!state||!state.accepting){el('cancelMessage').textContent='접수 마감 후에는 취소할 수 없습니다.';return;}
+ if(!confirm('이 공고의 희망 신청을 취소하시겠습니까?'))return;
+ var btn=el('cancelSend');btn.disabled=true;el('cancelMessage').textContent='취소 처리 중...';
+ google.script.run.withSuccessHandler(function(r){
+  btn.disabled=false;el('cancelMessage').textContent=r.message;
+  el('cancelCode').value='';el('cancelTicket').style.display='none';
+  try{localStorage.removeItem(cancelStorageKey);}catch(e){}
+  refresh();
+ }).withFailureHandler(function(e){
+  btn.disabled=false;el('cancelMessage').textContent=e.message||String(e);
+ }).cancelApplicant(NOTICE_ID,code);
+};
 el('send').onclick=function(){
  if(!state||!state.accepting||!selected||submitting)return;
  if(!el('consent').checked){el('message').textContent='본인 신청 확인을 체크해주세요.';return}
  submitting=true;el('send').disabled=true;el('message').textContent='접수 중...';
  google.script.run.withSuccessHandler(function(r){
   submitting=false;el('message').textContent=r.message;selected=null;
+  if(r.cancelCode){
+    el('cancelCode').value=r.cancelCode;
+    el('ticketText').textContent=r.cancelCode;
+    el('cancelTicket').style.display='block';
+    try{localStorage.setItem(cancelStorageKey,r.cancelCode);}catch(e){}
+  }
   el('nameSearch').value='';el('chosen').style.display='none';refresh();
  }).withFailureHandler(function(e){
   submitting=false;el('message').textContent=e.message||String(e);
