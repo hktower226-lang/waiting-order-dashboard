@@ -32,6 +32,11 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 #cancelTicket{border:1px solid #b8dbbf;background:#effbf0;border-radius:9px;padding:12px;margin-top:12px}
 .cancel-code{display:block;overflow-wrap:anywhere;padding:9px;margin:9px 0;background:white;border:1px solid #d2e4d4;border-radius:8px;font-size:12px}
 #copyCode{background:#64748b}
+#adminCard{display:none}
+.admin-item{border:1px solid #dce4ed;border-radius:10px;padding:12px;margin:10px 0;background:#f8fafc}
+.admin-item input{margin-top:6px}
+.admin-item button{background:#9b1c1c;margin-top:9px}
+.admin-meta{font-size:13px;color:#526278;margin-bottom:7px}
 
 </style>
 </head>
@@ -77,9 +82,20 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 <div id="people" aria-live="polite">불러오는 중...</div>
 <button id="reload" style="background:#64748b;margin-top:10px">지금 새로고침</button>
 </div>
+<div class="card" id="adminCard">
+ <div class="eyebrow">경기지역본부 · 관리자 전용</div>
+ <h1 id="adminTitle">희망접수 관리자</h1>
+ <p>신청 기록을 확인하고 반려할 수 있습니다. 반려된 조합원은 공개 선순위 명단에서 제외됩니다.</p>
+ <label for="adminPassword">관리자 비밀번호</label>
+ <input id="adminPassword" type="password" autocomplete="off" placeholder="관리자 비밀번호 입력">
+ <button id="adminLoad" type="button" style="margin-top:10px">접수자 조회</button>
+ <p id="adminStatus" aria-live="polite"></p>
+ <div id="adminRows"></div>
+</div>
 </main>
 <script>
 var NOTICE_ID = <?!= JSON.stringify(noticeId) ?>;
+var VIEW = <?!= JSON.stringify(view) ?>;
 var state=null,submitting=false,selected=null,searchDelay=null;
 function el(id){return document.getElementById(id)}
 function para(text){var p=document.createElement('p');p.textContent=text;return p}
@@ -128,6 +144,44 @@ function render(result){
  tick();
 }
 function refresh(){google.script.run.withSuccessHandler(render).withFailureHandler(error).getState(NOTICE_ID)}
+function refreshAdmin(){
+ var pw=el('adminPassword').value;
+ if(!pw){el('adminStatus').textContent='관리자 비밀번호를 입력해주세요.';return;}
+ el('adminLoad').disabled=true;
+ el('adminStatus').textContent='접수 기록을 조회하고 있습니다...';
+ google.script.run.withSuccessHandler(function(items){
+  el('adminLoad').disabled=false;
+  el('adminStatus').textContent='총 '+items.length+'건 · 접수 중 '+items.filter(function(x){return x.status==='접수'}).length+'건';
+  el('adminRows').replaceChildren();
+  if(!items.length){el('adminRows').appendChild(para('접수 기록이 없습니다.'));return;}
+  items.sort(function(a,b){return Number(a.seq)-Number(b.seq)});
+  items.forEach(function(item){
+   var box=document.createElement('div');box.className='admin-item';
+   var name=document.createElement('b');name.textContent=item.name+' · '+item.branch+' · 대기 '+item.seq+'번';
+   var detail=document.createElement('div');detail.className='admin-meta';
+   detail.textContent='접수: '+item.submittedAt+' / 상태: '+item.status+(item.reason?' / 사유: '+item.reason:'');
+   box.append(name,detail);
+   if(item.status==='접수'){
+    var reason=document.createElement('input');reason.placeholder='반려 사유 (선택사항)';reason.maxLength=200;
+    var reject=document.createElement('button');reject.type='button';reject.textContent='이 신청 반려';
+    reject.onclick=function(){
+     if(!confirm(item.name+' 조합원의 희망 신청을 반려하시겠습니까?'))return;
+     reject.disabled=true;
+     google.script.run.withSuccessHandler(function(r){
+      el('adminStatus').textContent=r.message;refreshAdmin();
+     }).withFailureHandler(function(e){
+      reject.disabled=false;el('adminStatus').textContent=e.message||String(e);
+     }).adminRejectApplicant(NOTICE_ID,item.sheetRow,el('adminPassword').value,reason.value);
+    };
+    box.append(reason,reject);
+   }
+   el('adminRows').appendChild(box);
+  });
+ }).withFailureHandler(function(e){
+  el('adminLoad').disabled=false;el('adminRows').replaceChildren();
+  el('adminStatus').textContent=e.message||String(e);
+ }).adminGetApplications(NOTICE_ID,pw);
+}
 function searchNames(){
  var q=el('nameSearch').value.trim().replace(/\s+/g,'');
  el('pickList').replaceChildren();
@@ -196,5 +250,15 @@ el('send').onclick=function(){
   el('send').disabled=!(state&&state.accepting)||!selected;
  }).submitApplicant(NOTICE_ID,selected.key,true);
 };
-refresh();setInterval(refresh,15000);setInterval(tick,1000);
+el('adminLoad').onclick=refreshAdmin;
+if(VIEW==='admin'){
+ el('adminCard').style.display='block';
+ el('applyCard').style.display='none';
+ el('rankingCard').style.display='none';
+ document.querySelector('.card').style.display='none';
+}else{
+ refresh();
+ setInterval(refresh,15000);
+ setInterval(tick,1000);
+}
 </script></body></html>
