@@ -26,7 +26,8 @@ function doGet(e) {
   const id = assertId_(supplied);
   const tpl = HtmlService.createTemplateFromFile('Index');
   tpl.noticeId = id;
-  tpl.view = (e && e.parameter && e.parameter.view==='ranking') ? 'ranking' : 'apply';
+  // 관리자 모드는 별도 주소에서만 열리고, 서버에서도 비밀번호를 검사한다.
+  tpl.view = (e && e.parameter && e.parameter.view==='admin') ? 'admin' : 'apply';
   return tpl.evaluate()
     .setTitle('경기지역본부 이력서 선정')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
@@ -156,7 +157,7 @@ function alreadyAppliedForSmall_(sheet,person) {
   const currentKey=memberKey_(person);
   for(const r of rows){
     // 소형 이력서 신청 1회 제한: 취소한 접수도 해당 대기기간의 지원 이력으로 유지.
-    if(String(r[5])!=='접수' && String(r[5])!=='취소')continue;
+    if(!['접수','취소','반려'].includes(String(r[5])))continue;
     if(String(r[2]).trim()!==String(person.name).trim() ||
        normalizeBranch_(r[3])!==normalizeBranch_(person.branch))continue;
     if(r[7]&&String(r[7]).trim()!==String(person.endDate||'').trim())continue;
@@ -241,7 +242,7 @@ function submitApplicant(id, memberKey, consent) {
 /**
  * 본인 접수 취소: 신청자에게만 발급된 비밀 취소코드를 대조.
  * 마감 전까지만 허용. 취소 행은 삭제하지 않고 감사 이력으로 남김.
- * 관리자 반려 기능은 만들지 않음.
+ * 관리자 반려는 별도의 비밀번호 검사 함수에서만 수행.
  */
 function cancelApplicant(id, cancelCode) {
   id = assertId_(id);
@@ -273,6 +274,65 @@ function cancelApplicant(id, cancelCode) {
     sheet.getRange(matches[0].row,6).setValue('취소');
     sheet.getRange(matches[0].row,10).setValue(new Date());
     return {ok:true,message:'희망 신청이 취소되었습니다. 선순위 명단에서도 제외됩니다.'};
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+
+/**
+ * 관리자 반려 비밀번호(12자 이상)를 Apps Script 프로젝트 설정 > 스크립트 속성에
+ * ADMIN_REVIEW_PASSWORD 로 한 번 등록한다. 코드는 공개되는 GitHub에 암호를 넣지 않는다.
+ * 공개 Web App 환경에서는 Google 계정 정보로 관리자 권한을 판별할 수 없으므로
+ * 모든 관리자 작업 호출에서 서버 측 비밀번호 검사가 필수다.
+ */
+function assertAdmin_(password) {
+  const configured = PropertiesService.getScriptProperties()
+    .getProperty('ADMIN_REVIEW_PASSWORD');
+  if (!configured || configured.length < 12)
+    throw new Error('관리자 비밀번호가 아직 설정되지 않았습니다. Apps Script 스크립트 속성을 확인해주세요.');
+  const given=String(password||'');
+  if(given.length<12||given.length>256||
+      hashCancelCode_(given)!==hashCancelCode_(configured))
+    throw new Error('관리자 비밀번호가 일치하지 않습니다.');
+}
+function adminGetApplications(id, password) {
+  assertAdmin_(password);
+  id=assertId_(id);
+  const rows=sheet_().getDataRange().getValues().slice(1);
+  return rows.map((r,i)=>({
+    sheetRow:i+2, noticeId:String(r[1]), name:String(r[2]||''),
+    branch:String(r[3]||''), seq:r[4],
+    status:String(r[5]||''), reason:String(r[10]||''),
+    submittedAt: r[0] instanceof Date
+      ? Utilities.formatDate(r[0],'Asia/Seoul','yyyy-MM-dd HH:mm:ss')
+      : String(r[0]||'')
+  })).filter(r=>r.noticeId===id);
+}
+function adminRejectApplicant(id, sheetRow, password, reason) {
+  assertAdmin_(password);
+  id=assertId_(id);
+  const row=Number(sheetRow);
+  reason=String(reason||'').trim();
+  if(!Number.isInteger(row)||row<2)
+    throw new Error('올바르지 않은 접수번호입니다.');
+  if(reason.length>200)
+    throw new Error('반려 사유는 200자 이내로 입력해주세요.');
+  const lock=LockService.getScriptLock();
+  if(!lock.tryLock(15000))throw new Error('처리 요청이 많습니다. 다시 시도해주세요.');
+  try {
+    const sheet=sheet_();
+    if(row>sheet.getLastRow())throw new Error('접수 기록이 존재하지 않습니다.');
+    const record=sheet.getRange(row,1,1,6).getValues()[0];
+    if(String(record[1])!==id)
+      throw new Error('해당 공고의 접수 기록이 아닙니다.');
+    if(String(record[5])!=='접수')
+      throw new Error('이미 취소·반려되었거나 접수 상태가 아닙니다.');
+    if(!sheet.getRange('K1').getValue())sheet.getRange('K1').setValue('반려사유');
+    if(!sheet.getRange('L1').getValue())sheet.getRange('L1').setValue('반려시각');
+    sheet.getRange(row,6).setValue('반려');
+    sheet.getRange(row,11,1,2).setValues([[reason,new Date()]]);
+    return {ok:true,message:String(record[2])+' 조합원 신청을 반려했습니다.'};
   } finally {
     lock.releaseLock();
   }
