@@ -85,17 +85,20 @@ function hangulInitials_(text) {
     return n>=0&&n<11172?CHO[Math.floor(n/588)]:c;
   }).join('');
 }
-function searchMembers(query) {
+function searchMembers(query, noticeId) {
+  const notice=notice_(assertId_(noticeId));
   const q=String(query||'').trim().replace(/\s+/g,'');
   if(q.length<2||q.length>30)return [];
   const matches=roster_().filter(r=>{
     const name=String(r.name||'').replace(/\s+/g,'');
     return name.includes(q)||hangulInitials_(name).includes(q);
   });
-  return matches.slice(0,30).map(r=>({
-    key:memberKey_(r),name:String(r.name),branch:String(r.branch),
-    seq:r.seq
-  }));
+  return matches.slice(0,30).map(r=>{
+    let allowed=true, reason='';
+    try{checkApplicant_(r,notice);}catch(e){allowed=false;reason=e.message||'지원 불가';}
+    return {key:memberKey_(r),name:String(r.name),branch:String(r.branch),
+      seq:r.seq,allowed:allowed,reason:reason};
+  });
 }
 function smallNoteFlags_(person) {
   // 비고에서 명확히 표시된 내용만 활용한다. 날짜/문맥이 불명확하면 판단하지 않는다.
