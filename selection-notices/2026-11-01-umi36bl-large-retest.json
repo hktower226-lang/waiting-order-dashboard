@@ -3,7 +3,7 @@
   "type": "large",
   "status": "open",
   "createdAt": "2026-11-01",
-  "deadline": "2026-11-01T13:53:41+09:00",
+  "deadline": "2026-11-01T17:00:00+09:00",
   "project": "[테스트 ①·대형] 평택 고덕 우미건설 36BL",
   "site": "경기도 평택시 고덕동 산142",
   "contractor": "우미건설",
@@ -28,5 +28,6 @@
     "phone": "010-8922-7671"
   },
   "signupUrl": "https://script.google.com/macros/s/AKfycbxbimEFQ8tA0a4Q8ZXWCQSnlH4ecxQudJwquSlyj8w_FZ_THsa0FI2KRp0appURqcOJ/exec?id=2026-11-01-umi36bl-large-retest",
-  "notice": "📢 [테스트①·대형] 우미건설 고덕 36BL\n\n■ 주소: 평택시 고덕동 산142\n■ 임대사: 동양타워 / 장비: 290HC(T형 1호기)\n■ 규모: 지하 2층~지상 20층\n■ 임금: 임단협 / 기간: 약 10개월\n■ 설치: 11/9~10 / 출근: 완성검사 후\n■ 특이: 코핑 시 레버 조작 요청 가능\n⏰ 마감: 11/1(일) 13:53\n\n👇 이력서 희망 신청\nhttps://script.google.com/macros/s/AKfycbxbimEFQ8tA0a4Q8ZXWCQSnlH4ecxQudJwquSlyj8w_FZ_THsa0FI2KRp0appURqcOJ/exec?id=2026-11-01-umi36bl-large-retest"
+  "notice": "📢 [테스트①·대형] 우미건설 고덕 36BL\n\n■ 주소: 평택시 고덕동 산142\n■ 임대사: 동양타워 / 장비: 290HC(T형 1호기)\n■ 규모: 지하 2층~지상 20층\n■ 임금: 임단협 / 기간: 약 10개월\n■ 설치: 11/9~10 / 출근: 완성검사 후\n■ 특이: 코핑 시 레버 조작 요청 가능\n⏰ 마감: 11/1(일) 17:00\n\n👇 이력서 희망 신청\nhttps://script.google.com/macros/s/AKfycbxbimEFQ8tA0a4Q8ZXWCQSnlH4ecxQudJwquSlyj8w_FZ_THsa0FI2KRp0appURqcOJ/exec?id=2026-11-01-umi36bl-large-retest",
+  "reminderAt": "2026-11-01T16:30:00+09:00"
 }
