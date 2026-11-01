@@ -35,7 +35,10 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 #adminCard{display:none}
 .admin-item{border:1px solid #dce4ed;border-radius:10px;padding:12px;margin:10px 0;background:#f8fafc}
 .admin-item input{margin-top:6px}
-.admin-item button{background:#9b1c1c;margin-top:9px}
+.admin-item button{margin-top:9px}
+.admin-item .reject-btn{background:#9b1c1c}
+.admin-item .select-btn{background:#1e40af}
+.admin-item .release-btn{background:#475569}
 .admin-meta{font-size:13px;color:#526278;margin-bottom:7px}
 
 </style>
@@ -69,7 +72,7 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 </div>
 <div class="cancel-panel">
  <h2>희망 신청 취소</h2>
- <p>신청하신 본인만 접수 마감 전까지 취소할 수 있습니다.</p>
+ <p>일반 희망 신청은 마감 전까지 취소할 수 있습니다. 이력서 선정 후에도 본인 취소코드로 선정을 취소할 수 있습니다.</p>
  <label for="cancelCode">본인 취소코드</label>
  <input id="cancelCode" type="text" autocomplete="off" placeholder="신청 후 받은 취소코드 입력">
  <button id="cancelSend" type="button">희망 신청 취소</button>
@@ -77,15 +80,15 @@ main{display:block}.count{font-weight:800;color:#1d4ed8}.muted{color:#738297}
 </div>
 </div>
 <div class="card" id="rankingCard">
-<h2>희망자 선순위 · <span id="total">0명</span></h2>
-<p><small>접수자만 대기순번 오름차순으로 표시합니다. 최종 선정은 관리자 확인 후 확정됩니다.</small></p>
+<h2>희망자 선순위 상위 3명</h2>
+<p><small>총 희망자 <b id="total">0명</b> · 대기순번 기준 1~3위만 공개합니다. 최종 선정은 관리자 확인 후 확정됩니다.</small></p>
 <div id="people" aria-live="polite">불러오는 중...</div>
 <button id="reload" style="background:#64748b;margin-top:10px">지금 새로고침</button>
 </div>
 <div class="card" id="adminCard">
  <div class="eyebrow">경기지역본부 · 관리자 전용</div>
  <h1 id="adminTitle">희망접수 관리자</h1>
- <p>신청 기록을 확인하고 반려할 수 있습니다. 반려된 조합원은 공개 선순위 명단에서 제외됩니다.</p>
+ <p>신청자 전체를 조회해 이력서 선정·선정 취소·반려 처리할 수 있습니다. 선정된 조합원은 선정 취소 전까지 다른 공고 신청 및 중복 선정이 제한됩니다.</p>
  <label for="adminPassword">관리자 비밀번호</label>
  <input id="adminPassword" type="password" autocomplete="off" placeholder="관리자 비밀번호 입력">
  <button id="adminLoad" type="button" style="margin-top:10px">접수자 조회</button>
@@ -138,7 +141,8 @@ function render(result){
  result.participants.forEach(function(p,i){
   var row=document.createElement('div'),r=document.createElement('span'),name=document.createElement('b');
   row.className='row';r.className='tag';r.textContent=(i+1)+'순위 · 대기 '+p.seq+'번';
-  name.textContent=p.name+' ('+p.branch+')';row.append(r,name);el('people').appendChild(row);
+  name.textContent=p.name+' ('+p.branch+')'+(p.status==='선정'?' · 이력서 선정':'');
+  row.append(r,name);el('people').appendChild(row);
  });
  el('send').disabled=!result.accepting||!selected||submitting;
  tick();
@@ -163,7 +167,7 @@ function refreshAdmin(){
    box.append(name,detail);
    if(item.status==='접수'){
     var reason=document.createElement('input');reason.placeholder='반려 사유 (선택사항)';reason.maxLength=200;
-    var reject=document.createElement('button');reject.type='button';reject.textContent='이 신청 반려';
+    var reject=document.createElement('button');reject.type='button';reject.className='reject-btn';reject.textContent='이 신청 반려';
     reject.onclick=function(){
      if(!confirm(item.name+' 조합원의 희망 신청을 반려하시겠습니까?'))return;
      reject.disabled=true;
@@ -173,7 +177,31 @@ function refreshAdmin(){
       reject.disabled=false;el('adminStatus').textContent=e.message||String(e);
      }).adminRejectApplicant(NOTICE_ID,item.sheetRow,el('adminPassword').value,reason.value);
     };
-    box.append(reason,reject);
+    var choose=document.createElement('button');
+    choose.type='button';choose.className='select-btn';choose.textContent='이력서 선정 확정';
+    choose.onclick=function(){
+     if(!confirm(item.name+' 조합원을 이력서 선정 처리하시겠습니까?'))return;
+     choose.disabled=true;
+     google.script.run.withSuccessHandler(function(r){
+      el('adminStatus').textContent=r.message;refreshAdmin();
+     }).withFailureHandler(function(e){
+      choose.disabled=false;el('adminStatus').textContent=e.message||String(e);
+     }).adminSetSelection(NOTICE_ID,item.sheetRow,el('adminPassword').value,'select');
+    };
+    box.append(choose,reason,reject);
+   }else if(item.status==='선정'){
+    var release=document.createElement('button');
+    release.type='button';release.className='release-btn';release.textContent='선정 취소 (신청 제한 해제)';
+    release.onclick=function(){
+     if(!confirm(item.name+' 조합원의 선정을 취소하시겠습니까?'))return;
+     release.disabled=true;
+     google.script.run.withSuccessHandler(function(r){
+      el('adminStatus').textContent=r.message;refreshAdmin();
+     }).withFailureHandler(function(e){
+      release.disabled=false;el('adminStatus').textContent=e.message||String(e);
+     }).adminSetSelection(NOTICE_ID,item.sheetRow,el('adminPassword').value,'release');
+    };
+    box.appendChild(release);
    }
    el('adminRows').appendChild(box);
   });
@@ -220,8 +248,7 @@ el('copyCode').onclick=function(){
 el('cancelSend').onclick=function(){
  var code=el('cancelCode').value.trim();
  if(!code){el('cancelMessage').textContent='본인 취소코드를 입력해주세요.';return;}
- if(!state||!state.accepting){el('cancelMessage').textContent='접수 마감 후에는 취소할 수 없습니다.';return;}
- if(!confirm('이 공고의 희망 신청을 취소하시겠습니까?'))return;
+ if(!confirm('이 공고의 희망 신청 또는 이력서 선정을 취소하시겠습니까?'))return;
  var btn=el('cancelSend');btn.disabled=true;el('cancelMessage').textContent='취소 처리 중...';
  google.script.run.withSuccessHandler(function(r){
   btn.disabled=false;el('cancelMessage').textContent=r.message;
