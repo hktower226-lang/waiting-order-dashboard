@@ -251,13 +251,7 @@ function getState(id) {
   return {
     notice:{
       id:n.id,project:n.project,deadline:n.deadline,
-      type:noticeType_(n),contact:resolveContact_(n),
-      site:n.site||'',rental:n.rental||'',contractor:n.contractor||'',
-      machine:n.machine||'',wage:n.wage||'',duration:n.duration||'',
-      floors:n.floors||'',workSchedule:n.workSchedule||'',
-      plannedInstallation:n.plannedInstallation||'',
-      startCondition:n.startCondition||'',notes:Array.isArray(n.notes)?n.notes:[],
-      contractType:n.contractType||''
+      type:noticeType_(n),contact:resolveContact_(n)
     },
     accepting:isOpen,configured:n.status==='open',
     now:new Date(now).toISOString(),
