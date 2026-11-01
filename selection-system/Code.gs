@@ -332,20 +332,44 @@ function cancelApplicant(id, name, birth6) {
 }
 
 /**
- * 관리자 반려 비밀번호(12자 이상)를 Apps Script 프로젝트 설정 > 스크립트 속성에
- * ADMIN_REVIEW_PASSWORD 로 한 번 등록한다. 코드는 공개되는 GitHub에 암호를 넣지 않는다.
- * 공개 Web App 환경에서는 Google 계정 정보로 관리자 권한을 판별할 수 없으므로
- * 모든 관리자 작업 호출에서 서버 측 비밀번호 검사가 필수다.
+ * 관리자 비밀번호는 숫자 4자리. 프로젝트 설정 > 스크립트 속성에서
+ * ADMIN_REVIEW_PASSWORD 값을 설정하고 GitHub에는 비밀번호를 올리지 않는다.
+ * 5회 연속 오입력 시 30분 동안 관리자 조회·선정·반려를 모두 잠근다.
+ * 잠금 상태는 서버의 스크립트 속성에 저장하며 서로 다른 요청도 함께 집계한다.
  */
 function assertAdmin_(password) {
-  const configured = PropertiesService.getScriptProperties()
-    .getProperty('ADMIN_REVIEW_PASSWORD');
-  if (!configured || configured.length < 12)
-    throw new Error('관리자 비밀번호가 아직 설정되지 않았습니다. Apps Script 스크립트 속성을 확인해주세요.');
-  const given=String(password||'');
-  if(given.length<12||given.length>256||
-      hashCancelCode_(given)!==hashCancelCode_(configured))
-    throw new Error('관리자 비밀번호가 일치하지 않습니다.');
+  const props=PropertiesService.getScriptProperties();
+  const configured=String(props.getProperty('ADMIN_REVIEW_PASSWORD')||'');
+  if(!/^\d{4}$/.test(configured))
+    throw new Error('프로젝트 설정의 ADMIN_REVIEW_PASSWORD를 숫자 4자리로 등록해주세요.');
+  const lock=LockService.getScriptLock();
+  if(!lock.tryLock(10000))
+    throw new Error('관리자 인증 요청이 많습니다. 잠시 후 다시 시도해주세요.');
+  try {
+    const now=Date.now();
+    const until=Number(props.getProperty('ADMIN_LOCKED_UNTIL')||0);
+    if(until>now)
+      throw new Error('관리자 비밀번호 오류 5회로 잠겼습니다. 30분 후 다시 시도해주세요.');
+    if(until>0) {
+      props.deleteProperty('ADMIN_LOCKED_UNTIL');
+      props.deleteProperty('ADMIN_FAILED_ATTEMPTS');
+    }
+    const given=String(password||'');
+    if(!/^\d{4}$/.test(given)||given!==configured) {
+      const failures=Number(props.getProperty('ADMIN_FAILED_ATTEMPTS')||0)+1;
+      if(failures>=5) {
+        props.setProperty('ADMIN_FAILED_ATTEMPTS','5');
+        props.setProperty('ADMIN_LOCKED_UNTIL',String(now+30*60*1000));
+        throw new Error('비밀번호 5회 오류로 30분간 관리자 기능이 잠겼습니다.');
+      }
+      props.setProperty('ADMIN_FAILED_ATTEMPTS',String(failures));
+      throw new Error('관리자 비밀번호가 일치하지 않습니다. 남은 시도 '+(5-failures)+'회');
+    }
+    props.deleteProperty('ADMIN_FAILED_ATTEMPTS');
+    props.deleteProperty('ADMIN_LOCKED_UNTIL');
+  } finally {
+    lock.releaseLock();
+  }
 }
 function adminGetApplications(id, password) {
   assertAdmin_(password);
