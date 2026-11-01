@@ -297,6 +297,7 @@ el('cancelSend').onclick=function(){
   el('cancelName').value='';
   el('cancelBirth').value='';
   refresh();
+  refreshSearchIndex();
  }).withFailureHandler(function(e){
   btn.disabled=false;el('cancelMessage').textContent=e.message||String(e);
  }).cancelApplicant(NOTICE_ID,name,birth6);
