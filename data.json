@@ -1098,5 +1098,15 @@
     "company": "",
     "isSub": "O",
     "isDoc": ""
+  },
+  {
+    "seq": 111,
+    "name": "임재훈",
+    "branch": "북서",
+    "endDate": "2026-11-02",
+    "note": "",
+    "company": "",
+    "isSub": "",
+    "isDoc": ""
   }
 ]
